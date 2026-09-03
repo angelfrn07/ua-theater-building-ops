@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UA Theater · Building Ops</title>
+<meta name="description" content="Everything needed to run the former Amarillo Star theater — drawings, the 3D model, HVAC and electrical status, the inspection report, and the volunteer command center app.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#211c17;--ink2:#2c2620;--bone:#f6f1e7;--paper:#fbf8f1;--muted:#7c736a;
+    --gold:#b8853c;--gold2:#cda35e;--slate:#8d918b;--line:rgba(33,28,23,.12)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Hanken Grotesk",-apple-system,BlinkMacSystemFont,sans-serif;color:var(--ink);
+    background:var(--paper);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+  h1,h2,h3{font-family:"Fraunces",serif;font-weight:600;line-height:1.08;letter-spacing:-.01em}
+  a{color:var(--gold)}
+  .eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+
+  header{background:linear-gradient(160deg,#241f19,#39301f);color:var(--bone);padding:54px 0 60px;position:relative;overflow:hidden}
+  header .wrap{position:relative;z-index:2}
+  .mark{width:46px;height:46px;border:2.5px solid var(--gold2);border-radius:50%;display:grid;place-items:center;
+    font-family:"Fraunces",serif;font-weight:600;color:var(--gold2);font-size:22px;margin-bottom:22px}
+  header h1{font-size:clamp(31px,5.6vw,54px);color:var(--bone);max-width:18ch}
+  header h1 em{font-style:italic;color:var(--gold2)}
+  header p.sub{margin-top:18px;font-size:clamp(16px,2vw,19px);color:#d9d0c2;max-width:56ch}
+  .cta{display:inline-flex;align-items:center;gap:10px;margin-top:30px;background:var(--gold);color:#1c1306;
+    font-weight:700;font-size:16px;padding:15px 26px;border-radius:12px;text-decoration:none;transition:.15s}
+  .cta:hover{background:var(--gold2);transform:translateY(-1px)}
+  .cta.ghost{background:transparent;color:var(--bone);border:1px solid rgba(246,241,231,.32);margin-left:10px}
+  .addr{margin-top:26px;font-size:13px;letter-spacing:.04em;color:#b7ad9d}
+
+  section{padding:56px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(23px,3.2vw,34px);margin-bottom:8px}
+  section .lead{color:var(--muted);font-size:16.5px;max-width:62ch;margin-bottom:26px}
+
+  .facts{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px}
+  .fact{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .fact b{display:block;font-family:"Fraunces",serif;font-size:25px;color:var(--ink);line-height:1}
+  .fact span{font-size:12.5px;color:var(--muted);margin-top:7px;display:block}
+
+  .answer{background:#f1ece1;border:1px solid var(--line);border-radius:18px;padding:26px}
+  .keys{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px}
+  .key{border-left:3px solid var(--gold);padding:4px 0 4px 16px}
+  .key.red{border-color:#b94a3b}.key.green{border-color:#3c8a4e}
+  .key h3{font-size:16.5px;margin-bottom:4px}.key p{font-size:14.5px;color:var(--muted)}
+
+  .dl{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .dl a{background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:13px 17px;
+    text-decoration:none;color:var(--ink);font-weight:600;font-size:14.5px;display:flex;gap:9px;align-items:center}
+  .dl a:hover{border-color:var(--gold);background:#fff}
+  .dl a small{color:var(--muted);font-weight:500}
+
+  .gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+  .gal figure{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#eee}
+  .gal img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+
+  .note{font-size:13.5px;color:var(--muted);background:#f1ece1;border-radius:12px;padding:16px 18px;margin-top:24px}
+  .warn{font-size:13.5px;background:#f6e9e6;border:1px solid #e3c3ba;border-radius:12px;padding:16px 18px;margin-top:24px;color:#7a3327}
+  footer{padding:40px 0 70px;color:var(--muted);font-size:13px}
+  footer b{color:var(--ink)}
+  @media(max-width:760px){.facts{grid-template-columns:1fr 1fr}.gal{grid-template-columns:1fr 1fr}.cta.ghost{margin-left:0;margin-top:10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="mark">P</div>
+    <div class="eyebrow">UA Theater · Building Ops</div>
+    <h1>Everything you need to <em>run this building.</em></h1>
+    <p class="sub">For Pastor Aaron, Pastor Shana, Pastor Manny, Johnny Ray, and anyone helping run the building. Drawings, the 3D model, HVAC and electrical status, the inspection report, and the volunteer app — all in one place. No deal pricing or contracts live here, that's kept separate.</p>
+    <div>
+      <a class="cta" href="UA-Theater-Roof-Book.pdf">Start here — Roof Book →</a>
+      <a class="cta ghost" href="dashboard.html">Live AC dashboard</a>
+    </div>
+    <div class="addr">Former Amarillo Star 14 · 8275 W Amarillo Blvd, Amarillo, TX</div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">The short version</div>
+    <h2>Where things stand right now</h2>
+    <p class="lead">26 rooftop units. The building panel can reach 14 of them; the other 12 only respond by hand at the unit. The panel's schedule still runs the old movie-theater hours and can't be rewritten — the software no longer exists. Electrical: the main panel is in service with a few fixable problems, but the full original wiring drawings are still missing.</p>
+    <div class="facts">
+      <div class="fact"><b>26</b><span>rooftop units total</span></div>
+      <div class="fact"><b>14</b><span>reachable from the panel</span></div>
+      <div class="fact"><b>400A</b><span>main electrical panel, Square D</span></div>
+      <div class="fact"><b>14</b><span>auditoriums in the building</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Drawings &amp; plans</div>
+    <h2>The building on paper</h2>
+    <p class="lead">Floor plans, site plan, and the original 1998 mechanical drawing set. All PDFs, open on any phone.</p>
+    <div class="dl">
+      <a href="01-Drawings-and-Plans/Theater-Ground-Floor-Plan.pdf">▶ Ground floor plan <small>· PDF</small></a>
+      <a href="01-Drawings-and-Plans/Theater-Mezzanine-Plan.pdf">▶ Mezzanine plan <small>· PDF</small></a>
+      <a href="01-Drawings-and-Plans/Theater-Site-Plan.pdf">▶ Site plan <small>· PDF</small></a>
+      <a href="01-Drawings-and-Plans/Power-Church-Theater-Plans.pdf">▶ Full plan set <small>· PDF</small></a>
+      <a href="01-Drawings-and-Plans/1998-Original-Mechanical-Set.pdf">▶ 1998 mechanical set <small>· PDF</small></a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">See it</div>
+    <h2>The building in 3D</h2>
+    <p class="lead">Spin it, look inside, slide the roof and walls. Plus the sanctuary seating study — how houses 106–109 could combine into one worship space.</p>
+    <div>
+      <a class="cta" href="02-3D-Model-and-Sanctuary-Plan/index.html">Open the interactive 3D model →</a>
+      <a class="cta ghost" href="02-3D-Model-and-Sanctuary-Plan/sanctuary.html">Walk into the sanctuary</a>
+    </div>
+    <div class="gal">
+      <figure><img src="02-3D-Model-and-Sanctuary-Plan/renderings/00-overview.jpg" alt="Building overview render"></figure>
+      <figure><img src="02-3D-Model-and-Sanctuary-Plan/renderings/sanctuary-plan.png" alt="Sanctuary plan"></figure>
+      <figure><img src="02-3D-Model-and-Sanctuary-Plan/renderings/proposed-sanctuary.png" alt="Proposed sanctuary"></figure>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">HVAC</div>
+    <h2>Mechanical &amp; the building panel</h2>
+    <p class="lead">Which rooftop unit serves which room, what's actually up there today vs. the original design, the building automation panel, and the live remote-control system that can turn units on and off from a phone.</p>
+    <div class="answer">
+      <div class="keys">
+        <div class="key green"><h3>What works</h3><p>14 of 26 units answer the panel. The remote-control system can set any of them to Cooling and hold a target temperature.</p></div>
+        <div class="key red"><h3>What doesn't</h3><p>12 units are wired-but-dark (comms failure, not software). The panel's own schedule is frozen on old movie hours.</p></div>
+      </div>
+    </div>
+    <div class="dl" style="margin-top:22px">
+      <a href="03-Mechanical-and-HVAC/RTU-ZONE-MAP.md">▶ RTU-to-room map</a>
+      <a href="03-Mechanical-and-HVAC/RTU-FIELD-VS-DESIGN.md">▶ What's really on the roof</a>
+      <a href="03-Mechanical-and-HVAC/RTU-CONDITION.md">▶ Unit condition history</a>
+      <a href="03-Mechanical-and-HVAC/BUILDING-AUTOMATION-SYSTEM.md">▶ The building panel, explained</a>
+      <a href="03-Mechanical-and-HVAC/HVAC-Remote-Control/README.md">▶ Remote-control system</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Electrical</div>
+    <h2>What we know, what we don't</h2>
+    <p class="lead">A licensed inspector's real findings, plus what original drawings are still missing.</p>
+    <div class="answer">
+      <table style="width:100%;border-collapse:collapse;font-size:15px">
+        <tr><td style="padding:8px 0;border-bottom:1px solid var(--line)"><b>Main panel</b></td><td style="padding:8px 0;border-bottom:1px solid var(--line);text-align:right">Square D, 400A, back of building</td></tr>
+        <tr><td style="padding:8px 0;border-bottom:1px solid var(--line)"><b>Subpanels</b></td><td style="padding:8px 0;border-bottom:1px solid var(--line);text-align:right">Kitchen, Camera Rooms</td></tr>
+        <tr><td style="padding:8px 0;border-bottom:1px solid var(--line)"><b>Known issues</b></td><td style="padding:8px 0;border-bottom:1px solid var(--line);text-align:right">No GFCI anywhere, one dead lobby circuit</td></tr>
+        <tr><td style="padding:8px 0"><b>Missing</b></td><td style="padding:8px 0;text-align:right">Full 1998 electrical set (one-line, panel schedules)</td></tr>
+      </table>
+    </div>
+    <div class="dl" style="margin-top:22px">
+      <a href="04-Electrical/ELECTRICAL-STATUS.md">▶ Full electrical status</a>
+      <a href="04-Electrical/2014-RPX-E3.1-booth-panels-lores.png">▶ Booth panel drawing <small>· the one sheet we have</small></a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Inspection</div>
+    <h2>The pre-closing walkthrough</h2>
+    <p class="lead">A licensed inspector physically walked the building before closing. The one document here that's a real person looking at current condition, not a 1998 drawing.</p>
+    <div class="dl">
+      <a href="05-Inspection-Report/2026-05-20-ABetterInspection-CCPIA-full-report.pdf">▶ Full inspection report <small>· PDF</small></a>
+      <a href="05-Inspection-Report/2026-05-CCPIA-INSPECTION-FINDINGS.md">▶ Findings summary</a>
+    </div>
+  </div>
+</section>
+
+<section style="border-bottom:none">
+  <div class="wrap">
+    <div class="eyebrow">Run the remodel</div>
+    <h2>Power Church Commander</h2>
+    <p class="lead">The volunteer job-tracking app for actually running the remodel — jobs with photo proof, a map of the building, who to report to. A real tool, not a document.</p>
+    <a class="cta" href="https://power-church-commander.myroyal-estates.workers.dev">Open Power Church Commander →</a>
+    <div class="note">No public sign-up — ask Angel for your personal invite link.</div>
+    <div class="warn"><b>Please note:</b> this repo is public so it opens for anyone with the link, no account needed. The building panel and dashboard logins have been removed from every document here — ask Angel directly if you need them.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Prepared for the team running the UA Theater building. <b>Add what you learn</b> — drop new findings, photos, or documents in the folder that matches them so everyone has them.
+  </div>
+</footer>
+</body>
+</html>
