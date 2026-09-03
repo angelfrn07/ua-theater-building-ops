@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Power Church — Sanctuary Concept (3D)</title>
+<style>
+  :root{--bone:#f3eee3;--gold:#c89a52;--gold2:#e0b876;--panel:rgba(22,18,14,.9);--line:rgba(243,238,227,.16)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden;background:#15110d;font-family:"Hanken Grotesk",-apple-system,sans-serif;color:var(--bone)}
+  #app{position:fixed;inset:0}
+  canvas{display:block;touch-action:none}
+  .topbar{position:fixed;top:0;left:0;right:0;z-index:20;display:flex;align-items:center;gap:13px;padding:14px 18px;
+    pointer-events:none;background:linear-gradient(180deg,rgba(10,8,6,.8),rgba(10,8,6,0))}
+  .mark{width:30px;height:30px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;
+    font-family:"Fraunces",serif;font-weight:600;color:var(--gold);font-size:15px;flex:none}
+  .topbar h1{font-family:"Fraunces",serif;font-weight:600;font-size:clamp(15px,2.3vw,20px);line-height:1.05}
+  .topbar h1 small{display:block;font-family:"Hanken Grotesk";font-weight:500;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--gold2);margin-top:3px}
+  .panel{position:fixed;right:16px;top:64px;z-index:18;background:var(--panel);border:1px solid var(--line);
+    border-radius:15px;padding:14px;backdrop-filter:blur(10px);width:236px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+  .cap{font-family:"Fraunces",serif;font-size:28px;color:var(--gold2);line-height:1}
+  .cap span{font-family:"Hanken Grotesk";font-size:12px;color:#bcae98;display:block;margin-top:4px;letter-spacing:.02em}
+  .seg{display:flex;gap:6px;margin-top:12px}
+  .seg button{flex:1;font-family:inherit;font-size:11.5px;font-weight:700;color:var(--bone);background:rgba(243,238,227,.05);
+    border:1px solid var(--line);border-radius:9px;padding:9px 6px;cursor:pointer;line-height:1.2}
+  .seg button.on{background:var(--gold);color:#1c1306;border-color:var(--gold)}
+  .seg button small{display:block;font-weight:500;font-size:9.5px;opacity:.85;margin-top:2px}
+  .tog{display:flex;align-items:center;gap:8px;font-size:12.5px;background:rgba(243,238,227,.05);border:1px solid var(--line);
+    border-radius:9px;padding:8px 10px;cursor:pointer;user-select:none;margin-top:8px}
+  .tog input{accent-color:var(--gold);width:14px;height:14px}
+  .tog.on{border-color:rgba(200,154,82,.5);background:rgba(200,154,82,.1)}
+  .note{font-size:10.5px;color:#a99a83;margin-top:11px;line-height:1.5}
+  .back{position:fixed;left:18px;bottom:16px;z-index:18;color:var(--gold2);font-size:13px;text-decoration:none;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:9px 13px;backdrop-filter:blur(8px)}
+  .hint{position:fixed;left:18px;bottom:54px;z-index:15;font-size:11px;color:#a99a83;max-width:60vw}
+  .loader{position:fixed;inset:0;z-index:40;display:grid;place-items:center;background:#15110d;transition:opacity .6s}
+  .loader .l{font-family:"Fraunces",serif;color:var(--gold2);font-size:15px}
+  .loader.hide{opacity:0;pointer-events:none}
+  body.clean .topbar,body.clean .panel,body.clean .back,body.clean .hint,body.clean .loader{display:none!important}
+  @media(max-width:640px){.panel{right:10px;width:184px}.hint{display:none}}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="importmap">
+{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}
+</script>
+</head>
+<body>
+<div id="app"></div>
+<div class="topbar"><div class="mark">P</div>
+  <h1>Power Church — Sanctuary Concept<small>The four center houses, opened into one room</small></h1></div>
+<div class="panel">
+  <div class="cap" id="cap">~1,850<span id="capsub">seats · columns kept (Option A)</span></div>
+  <div class="seg">
+    <button id="optA" class="on">A<small>keep · $0</small></button>
+    <button id="optB">B<small>open center</small></button>
+    <button id="optC">C<small>fully open</small></button>
+  </div>
+  <label class="tog on" id="t-worship"><input type="checkbox" checked><span>Worship lighting</span></label>
+  <label class="tog" id="t-roof"><input type="checkbox"><span>Show roof</span></label>
+  <label class="tog on" id="t-spin"><input type="checkbox" checked><span>Slow orbit</span></label>
+  <div class="note" id="modenote">Option A: all 17 steel columns stay (gold), aisles run on the column lines — no posts in the seats. $0 structural.</div>
+</div>
+<a class="back" href="index.html">← Back to project</a>
+<div class="hint">Drag to look around · scroll / pinch to zoom · switch Option A / B above</div>
+<div class="loader" id="loader"><div class="l">Building the sanctuary…</div></div>
+
+<script type="module">
+import * as THREE from 'three';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import * as BGU from 'three/addons/utils/BufferGeometryUtils.js';
+const mergeGeometries=BGU.mergeGeometries||BGU.mergeBufferGeometries;
+const COLS=[[-37.0, 38.8], [-66.7, 38.8], [-66.7, 24.8], [-66.7, -3.2], [-66.7, -28.8], [-7.3, 38.8], [22.3, 38.8], [52.0, 38.8], [-7.3, -3.2], [-7.3, -28.8], [99.3, 24.8], [99.3, 10.8], [99.3, -3.2], [99.3, -28.8], [52.0, -28.8], [52.0, -3.2], [52.0, 24.8]];
+const ROOM_W=200, ROOM_D=87, COL_H=30;
+// Option B removes the inboard front+center posts (keep back row + right-wall line).
+const isRemoved=c=>(c[1]<32 && c[0]<90);
+const COLS_KEPT=COLS.filter(c=>!isRemoved(c));
+const COLS_GONE=COLS.filter(isRemoved);
+
+const app=document.getElementById('app');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.setSize(innerWidth,innerHeight);
+renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.12;
+app.appendChild(renderer.domElement);
+
+const scene=new THREE.Scene();
+scene.background=new THREE.Color('#241d16'); scene.fog=new THREE.Fog('#241d16',120,360);
+const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,0.3,2000);
+camera.position.set(2,16,58);
+const controls=new OrbitControls(camera,renderer.domElement);
+controls.enableDamping=true; controls.dampingFactor=0.08;
+controls.target.set(0,7,-30); controls.minDistance=10; controls.maxDistance=170;
+controls.maxPolarAngle=Math.PI*0.49; controls.autoRotate=true; controls.autoRotateSpeed=0.35;
+['pointerdown','wheel','touchstart'].forEach(e=>renderer.domElement.addEventListener(e,()=>{controls.autoRotate=false;document.getElementById('t-spin').classList.remove('on');document.getElementById('t-spin').querySelector('input').checked=false;},{passive:true}));
+
+const hemi=new THREE.HemisphereLight('#fff1d6','#241a12',0.55); scene.add(hemi);
+const amb=new THREE.AmbientLight('#fff4e2',0.35); scene.add(amb);
+const key=new THREE.DirectionalLight('#ffe7c0',0.6); key.position.set(30,70,60);
+key.castShadow=true; key.shadow.mapSize.set(2048,2048);
+const sc=key.shadow.camera; sc.left=-130;sc.right=130;sc.top=130;sc.bottom=-130;sc.near=1;sc.far=400; key.shadow.bias=-0.0004; scene.add(key);
+function spot(c,i,px,py,pz,tx,ty,tz){const s=new THREE.SpotLight(c,i,200,0.6,0.5,1);s.position.set(px,py,pz);s.target.position.set(tx,ty,tz);scene.add(s,s.target);return s;}
+spot('#ffd9a0',1.4,-22,34,-6,-14,4,-37); spot('#ffd9a0',1.4,22,34,-6,14,4,-37); spot('#ffeccb',1.5,0,30,-12,0,12,-42);
+
+const matFloor=new THREE.MeshStandardMaterial({color:'#3a2722',roughness:0.95});
+const matAisle=new THREE.MeshStandardMaterial({color:'#5a3b34',roughness:0.9});
+const matCol=new THREE.MeshStandardMaterial({color:'#cdbf9c',roughness:0.5,metalness:0.25,emissive:'#3a2c10',emissiveIntensity:0.25});
+const matBeam=new THREE.MeshStandardMaterial({color:'#9aa0a6',roughness:0.4,metalness:0.6});
+const matStage=new THREE.MeshStandardMaterial({color:'#6e4a2c',roughness:0.7});
+const matBack=new THREE.MeshStandardMaterial({color:'#241d18',roughness:0.95});
+const matCross=new THREE.MeshStandardMaterial({color:'#e7cf9a',emissive:'#c79a4e',emissiveIntensity:0.55,roughness:0.4,metalness:0.3});
+const matScreen=new THREE.MeshStandardMaterial({color:'#10161e',roughness:0.4,emissive:'#16222e',emissiveIntensity:0.5});
+const matChair=new THREE.MeshStandardMaterial({color:'#5c2b2b',roughness:0.85});
+
+const Z_STAGE=-ROOM_D/2, Z_BACK=ROOM_D/2;
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W+24,ROOM_D+40),matFloor);
+floor.rotation.x=-Math.PI/2; floor.receiveShadow=true; scene.add(floor);
+
+// columns: all (A) and kept-only (B)
+function colMesh(list){const g=[];for(const c of list){const cy=new THREE.CylinderGeometry(0.85,0.85,COL_H,14);cy.translate(c[0],COL_H/2,c[1]);g.push(cy);}const m=new THREE.Mesh(mergeGeometries(g,false),matCol);m.castShadow=true;return m;}
+const colAll=colMesh(COLS), colKept=colMesh(COLS_KEPT); scene.add(colAll,colKept);
+// transfer beams (B): overhead girders where center posts were removed
+const beamGroup=new THREE.Group(); scene.add(beamGroup);
+[...new Set(COLS_GONE.map(c=>Math.round(c[0])))].forEach(x=>{const b=new THREE.Mesh(new THREE.BoxGeometry(2.2,2.6,ROOM_D-6),matBeam);b.position.set(x,COL_H-1.6,2);b.castShadow=true;beamGroup.add(b);});
+const beamX=new THREE.Mesh(new THREE.BoxGeometry(ROOM_W-10,2.6,2.2),matBeam); beamX.position.set(0,COL_H-1.6,Z_STAGE+22); beamGroup.add(beamX);
+// Option C: full clear-span — every floor post gone, roof on transfer trusses overhead
+const trussGroup=new THREE.Group(); scene.add(trussGroup);
+for(let x=-84;x<=84;x+=24){const t=new THREE.Mesh(new THREE.BoxGeometry(2,4.4,ROOM_D-6),matBeam);t.position.set(x,COL_H-2.6,2);t.castShadow=true;trussGroup.add(t);}
+[Z_STAGE+16,2,28].forEach(zz=>{const tl=new THREE.Mesh(new THREE.BoxGeometry(ROOM_W-10,2,2),matBeam);tl.position.set(0,COL_H-5,zz);trussGroup.add(tl);});
+trussGroup.visible=false;
+
+// stage / cross / screens
+const stage=new THREE.Mesh(new THREE.BoxGeometry(78,3.6,14),matStage); stage.position.set(0,1.8,Z_STAGE+8); stage.castShadow=stage.receiveShadow=true; scene.add(stage);
+const step=new THREE.Mesh(new THREE.BoxGeometry(40,1.8,3),matStage); step.position.set(0,0.9,Z_STAGE+15.5); scene.add(step);
+const podium=new THREE.Mesh(new THREE.BoxGeometry(2.4,3,1.6),matStage); podium.position.set(-9,5.1,Z_STAGE+10); podium.castShadow=true; scene.add(podium);
+const backdrop=new THREE.Mesh(new THREE.BoxGeometry(96,24,1),matBack); backdrop.position.set(0,12,Z_STAGE-0.5); scene.add(backdrop);
+const crossV=new THREE.Mesh(new THREE.BoxGeometry(1.4,11,0.8),matCross); crossV.position.set(0,13,Z_STAGE+0.3);
+const crossH=new THREE.Mesh(new THREE.BoxGeometry(5.4,1.4,0.8),matCross); crossH.position.set(0,15.2,Z_STAGE+0.3); scene.add(crossV,crossH);
+const crossGlow=new THREE.PointLight('#f2d79a',0.7,60); crossGlow.position.set(0,14,Z_STAGE+3); scene.add(crossGlow);
+[-32,32].forEach(sx=>{const s=new THREE.Mesh(new THREE.BoxGeometry(20,11,0.4),matScreen);s.position.set(sx,13,Z_STAGE+0.2);scene.add(s);});
+
+// roof toggle
+const roof=new THREE.Mesh(new THREE.PlaneGeometry(ROOM_W+24,ROOM_D+40),new THREE.MeshStandardMaterial({color:'#1d1712',roughness:1,side:THREE.DoubleSide}));
+roof.rotation.x=Math.PI/2; roof.position.y=COL_H; roof.visible=false; scene.add(roof);
+
+// aisle runners per option
+function runners(lines){const g=new THREE.Group();lines.forEach(ax=>{const r=new THREE.Mesh(new THREE.PlaneGeometry(5.4,ROOM_D+8),matAisle);r.rotation.x=-Math.PI/2;r.position.set(ax,0.02,2);g.add(r);});return g;}
+const AISLEX_A=[...new Set(COLS.map(c=>Math.round(c[0])))];
+const AISLEX_B=[-48,48];
+const runA=runners(AISLEX_A), runB=runners(AISLEX_B); scene.add(runA,runB);
+
+// seating per option
+function chairGeo(){const seat=new THREE.BoxGeometry(1.5,0.16,1.5);seat.translate(0,1.45,0);
+  const back=new THREE.BoxGeometry(1.5,1.15,0.16);back.translate(0,2.1,0.7);
+  const cush=new THREE.BoxGeometry(1.4,0.18,1.4);cush.translate(0,1.56,0);return mergeGeometries([seat,back,cush],false);}
+function buildSeats(aisleX,colList){
+  const nearCol=(x,z)=>colList.some(c=>Math.hypot(x-c[0],z-c[1])<3.4);
+  const inAisle=x=>aisleX.some(ax=>Math.abs(x-ax)<2.9);
+  const pos=[]; for(let z=Z_STAGE+20;z<=Z_BACK-3;z+=3.1){for(let x=-96;x<=96;x+=1.85){
+    if(inAisle(x)||nearCol(x,z))continue; pos.push([x,Math.max(0,(z-(Z_STAGE+20)))*0.07,z]);}}
+  const im=new THREE.InstancedMesh(chairGeo(),matChair,pos.length); im.castShadow=true; im.receiveShadow=true;
+  const m=new THREE.Matrix4(); pos.forEach((p,i)=>{m.makeTranslation(p[0],p[1],p[2]);im.setMatrixAt(i,m);}); im.instanceMatrix.needsUpdate=true;
+  return {mesh:im,count:pos.length};
+}
+const seatsA=buildSeats(AISLEX_A,COLS), seatsB=buildSeats(AISLEX_B,COLS_KEPT), seatsC=buildSeats(AISLEX_B,[]);
+scene.add(seatsA.mesh,seatsB.mesh,seatsC.mesh);
+
+let mode='A';
+function setMode(mm){ mode=mm;
+  const isA=mm==='A', isB=mm==='B', isC=mm==='C';
+  colAll.visible=isA; colKept.visible=isB; beamGroup.visible=isB; trussGroup.visible=isC;
+  seatsA.mesh.visible=isA; seatsB.mesh.visible=isB; seatsC.mesh.visible=isC;
+  runA.visible=isA; runB.visible=isB||isC;
+  const cnt=isA?seatsA.count:isB?seatsB.count:seatsC.count;
+  const sub=isA?'all 17 posts kept (A)':isB?(COLS_GONE.length+' posts removed (B)'):'every post removed — clear span (C)';
+  document.getElementById('cap').innerHTML=`~${(Math.round(cnt/50)*50).toLocaleString()}<span id="capsub">seats · ${sub}</span>`;
+  document.getElementById('optA').classList.toggle('on',isA);
+  document.getElementById('optB').classList.toggle('on',isB);
+  document.getElementById('optC').classList.toggle('on',isC);
+  document.getElementById('modenote').textContent = isA
+    ? 'Option A: all 17 steel columns stay (gold), aisles run on the column lines — no posts in the seats, but posts remain in the room. $0 structural.'
+    : isB
+    ? `Option B: the ${COLS_GONE.length} center & front posts removed (steel transfer beams overhead). Open center; a few posts remain at the back/edges. ~$300–700K.`
+    : 'Option C: every interior post removed — a fully open, column-free room on transfer trusses overhead. The whole congregation has a clear view to the stage. Premium structural option (~$1.2M–$3M).';
+}
+document.getElementById('optA').onclick=()=>setMode('A');
+document.getElementById('optB').onclick=()=>setMode('B');
+document.getElementById('optC').onclick=()=>setMode('C');
+
+function tog(id,fn){const el=document.getElementById(id);el.querySelector('input').addEventListener('change',e=>{el.classList.toggle('on',e.target.checked);fn(e.target.checked);});}
+tog('t-worship',on=>{if(on){scene.background.set('#241d16');hemi.intensity=0.55;amb.intensity=0.35;}else{scene.background.set('#3a342b');hemi.intensity=1.1;amb.intensity=0.8;}});
+tog('t-roof',on=>{roof.visible=on;});
+tog('t-spin',on=>{controls.autoRotate=on;});
+
+(function(){const q=new URLSearchParams(location.search);
+  const o=q.get('opt'); if(o==='b')setMode('B'); else if(o==='c')setMode('C'); else setMode('A');
+  if(q.get('clean')==='1')document.body.classList.add('clean');
+  if(q.get('spin')==='0')controls.autoRotate=false;
+  if(q.has('cam')){const a=q.get('cam').split(',').map(Number);if(a.length===3)camera.position.set(a[0],a[1],a[2]);}
+  if(q.has('tgt')){const a=q.get('tgt').split(',').map(Number);if(a.length===3)controls.target.set(a[0],a[1],a[2]);}})();
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+let _ferr=0;
+function tick(){ try{ controls.update(); renderer.render(scene,camera); }catch(e){ if(_ferr++<1) console.error('RENDER ERROR:', e && e.message, e); } requestAnimationFrame(tick); }
+tick();
+setTimeout(()=>document.getElementById('loader').classList.add('hide'),400);
+</script>
+</body>
+</html>

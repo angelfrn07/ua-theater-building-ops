@@ -1,0 +1,11 @@
+{
+  "_comment": "Power Church's own HVAC hours, expressed in the panel's three built-in modes (Unoccupied, Employee, Customer). Outside every window units fall to default_mode. Inside a window they go to that window's mode. The Pi re-arms the override while a window is active. enabled:false means the schedule is DORMANT and changes nothing until turned on. Times are 24-hour in the timezone below. Edit and the scheduler picks it up within a minute, no restart needed.",
+  "timezone": "America/Chicago",
+  "enabled": false,
+  "default_mode": "Unoccupied",
+  "windows": [
+    { "name": "Sunday service",       "days": ["sun"], "start": "07:00", "end": "13:00", "mode": "Customer" },
+    { "name": "Wednesday service",    "days": ["wed"], "start": "17:30", "end": "20:30", "mode": "Customer" },
+    { "name": "Weekday office/setup", "days": ["mon","tue","wed","thu","fri"], "start": "09:00", "end": "17:00", "mode": "Employee" }
+  ]
+}

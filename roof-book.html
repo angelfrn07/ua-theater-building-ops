@@ -1,0 +1,539 @@
+<title>UA Theater Roof Book</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* Committed to a light sheet. This is a drawing; it stays readable
+   regardless of the viewer's device theme. Status colors unchanged. */
+:root{
+  color-scheme:light;
+  --sheet:#ffffff; --ink:#0d0d0b; --ink2:#302e28; --ink3:#5f5b51;
+  --rule:#b8b3a6; --rule-hair:#d6d2c6; --rule-heavy:#0d0d0b;
+  --blue:#1f4e79; --amber:#8a5708; --clay:#8c2f1d;
+  --wash:#f4f2ec;
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--sheet);color:var(--ink);
+  font-family:Barlow,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16.5px;line-height:1.58}
+.sheet{max-width:1180px;margin:0 auto;padding:0 22px 70px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.cond{font-family:"Barlow Condensed",Barlow,sans-serif}
+
+/* ---- title block: drawn like a drawing sheet header ---- */
+.titleblock{border-bottom:2.5px solid var(--rule-heavy);padding:26px 0 0;margin-bottom:0}
+.tb-main{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;padding-bottom:14px}
+h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:clamp(34px,6.4vw,60px);
+  line-height:.92;letter-spacing:-.005em;text-transform:uppercase;margin:0}
+.tb-sub{font-family:"Barlow Condensed",sans-serif;font-size:clamp(15px,2vw,19px);font-weight:500;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--ink2);margin-top:5px}
+.tb-issue{font-family:"IBM Plex Mono",monospace;font-size:11.5px;line-height:1.75;color:var(--ink3);text-align:right;white-space:nowrap}
+.tb-issue b{color:var(--ink);font-weight:600}
+.tb-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.tbf{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:7px 10px 8px}
+.tbf .k{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.tbf .v{font-family:"Barlow Condensed",sans-serif;font-size:16.5px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.02em;margin-top:2px;line-height:1.2}
+.tbf .v small{font-family:Barlow,sans-serif;font-size:13.5px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--ink2);display:block;margin-top:1px}
+
+/* ---- summary strip ---- */
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));
+  border-left:1px solid var(--rule);margin:0 0 6px}
+.sc{border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:11px 12px 12px}
+.sc .n{font-family:"Barlow Condensed",sans-serif;font-size:44px;font-weight:700;line-height:.86;
+  font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.sc .l{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);margin-top:8px;line-height:1.5}
+.sc.w-blue .n{color:var(--blue)} .sc.w-amber .n{color:var(--amber)} .sc.w-clay .n{color:var(--clay)}
+
+/* ---- sections numbered like sheets ---- */
+section{margin-top:44px}
+.shead{display:flex;align-items:baseline;gap:12px;border-bottom:1.5px solid var(--rule-heavy);padding-bottom:5px;margin-bottom:14px;flex-wrap:wrap}
+.snum{font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:600;color:var(--blue);letter-spacing:.05em}
+h2{font-family:"Barlow Condensed",sans-serif;font-size:26px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.03em;margin:0;line-height:1}
+.shead .desc{font-size:14.5px;color:var(--ink3);margin-left:auto;font-style:italic}
+h3{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.06em;margin:22px 0 7px;color:var(--ink)}
+p{margin:9px 0;color:var(--ink2);max-width:74ch}
+p strong,li strong,td strong{color:var(--ink);font-weight:600}
+em{color:var(--ink2)}
+
+/* ---- roof plan ---- */
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin:12px 0;font-size:12.5px;color:var(--ink2);
+  font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.04em;text-transform:uppercase}
+.legend span b{font-size:13px;margin-right:5px;color:var(--ink)}
+.planwrap{overflow-x:auto;margin-top:4px}
+svg.plan{width:100%;min-width:900px;height:auto;display:block;
+  font-family:"IBM Plex Mono",ui-monospace,monospace}
+svg.plan .bldg{fill:#fbfaf6;stroke:var(--rule-heavy);stroke-width:2.5;stroke-linejoin:round}
+svg.plan .div line{stroke:var(--rule);stroke-width:1}
+svg.plan .ridge{stroke:var(--ink3);stroke-width:1.6;stroke-dasharray:11 5 3 5}
+svg.plan .ridgelbl{font-size:11px;letter-spacing:.16em;fill:var(--ink3)}
+svg.plan .slope line{stroke:var(--ink3);stroke-width:1.3}
+svg.plan .slope text{font-size:10px;letter-spacing:.13em;fill:var(--ink3);text-anchor:middle}
+svg.plan .rml text{font-size:13px;font-weight:600;letter-spacing:.05em;fill:var(--ink2);text-anchor:middle;
+  font-family:"Barlow Condensed",sans-serif}
+svg.plan .lm circle{fill:none;stroke:var(--ink);stroke-width:2}
+svg.plan .lead{stroke:var(--ink);stroke-width:1.1}
+svg.plan .lmt{font-size:12px;font-weight:600;letter-spacing:.11em;fill:var(--ink)}
+svg.plan .lms{font-size:11px;letter-spacing:.03em;fill:var(--ink3);font-family:Barlow,sans-serif}
+svg.plan .narr line{stroke:var(--ink);stroke-width:1.8}
+svg.plan .narr text{font-size:14px;font-weight:600;fill:var(--ink)}
+svg.plan .units rect{fill:#ffffff;stroke-width:2.2}
+svg.plan .units text{font-size:12.5px;font-weight:600;text-anchor:middle;letter-spacing:.02em}
+svg.plan .u.run rect{stroke:var(--blue)} svg.plan .u.run text{fill:var(--blue)}
+svg.plan .u.idle rect{stroke:var(--amber)} svg.plan .u.idle text{fill:var(--amber)}
+svg.plan .u.off rect{stroke:var(--clay);stroke-dasharray:5 3} svg.plan .u.off text{fill:var(--clay)}
+svg.plan .hotf{fill:var(--clay);font-weight:700}
+svg.plan .leaddot{fill:var(--ink)}
+svg.plan .wing text{font-size:10.5px;letter-spacing:.16em;fill:var(--ink3)}
+.planfoot{font-size:13.5px;color:var(--ink3);margin-top:9px;max-width:none;font-style:italic}
+.planfoot strong{color:var(--ink2);font-style:normal}
+
+/* ---- schedule tables ---- */
+.tw{overflow-x:auto;margin-top:12px}
+table{border-collapse:collapse;width:100%;min-width:880px;font-size:14.5px}
+thead th{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink3);text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap;
+  border-top:1.5px solid var(--rule-heavy);border-bottom:1.5px solid var(--rule-heavy);
+  position:sticky;top:0;background:var(--sheet)}
+td{padding:9px 10px;border-bottom:1px solid var(--rule-hair);color:var(--ink2);vertical-align:top;line-height:1.42}
+tbody tr:last-child td{border-bottom:1px solid var(--rule)}
+td.u{font-family:"IBM Plex Mono",monospace;font-weight:600;color:var(--ink);white-space:nowrap}
+td.n{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.band td{background:var(--wash);font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink3);font-weight:600;padding:6px 10px;border-bottom:1px solid var(--rule)}
+.st{font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.03em;white-space:nowrap}
+.st.run{color:var(--blue)} .st.idle{color:var(--amber)} .st.off{color:var(--clay)}
+.old{color:var(--clay);font-weight:600}
+
+/* ---- general notes (drawing convention) ---- */
+.gnotes{border-top:1.5px solid var(--rule-heavy);margin-top:16px}
+.gn{display:grid;grid-template-columns:auto 1fr;gap:14px;padding:11px 2px;border-bottom:1px solid var(--rule-hair);align-items:start}
+.gn .gi{font-family:"IBM Plex Mono",monospace;font-size:12.5px;font-weight:600;color:var(--blue);padding-top:2px;min-width:22px}
+.gn .gt{font-size:16px;color:var(--ink2);line-height:1.5}
+.gn .gt b{color:var(--ink);font-weight:600}
+.gn.flag .gi{color:var(--clay)}
+
+/* ---- flagged block: like a revision cloud note ---- */
+.rev{border:1.5px solid var(--clay);padding:13px 15px;margin:16px 0}
+.rev.info{border-color:var(--blue)}
+.rev.warn{border-color:var(--amber)}
+.rev .rt{font-family:"IBM Plex Mono",monospace;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--clay);font-weight:600;margin-bottom:6px}
+.rev.info .rt{color:var(--blue)} .rev.warn .rt{color:var(--amber)}
+.rev p{margin:6px 0;font-size:16px;max-width:none}
+.rev p:first-of-type{margin-top:0} .rev p:last-child{margin-bottom:0}
+
+/* ---- signal flow ---- */
+.chain{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:0;margin:16px 0;border:1px solid var(--rule)}
+.ch{padding:12px 13px;border-right:1px solid var(--rule)}
+.ch:last-child{border-right:none}
+.ch.mid{background:var(--wash)}
+.ch .ck{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink3)}
+.ch .cn{font-family:"Barlow Condensed",sans-serif;font-size:20px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-top:3px}
+.ch .cd{font-size:14px;color:var(--ink2);margin-top:5px;line-height:1.4}
+.arw{display:flex;align-items:center;justify-content:center;padding:0 9px;color:var(--blue);
+  font-family:"IBM Plex Mono",monospace;font-size:15px;border-right:1px solid var(--rule)}
+@media (max-width:760px){
+  .chain{grid-template-columns:1fr}
+  .ch,.arw{border-right:none;border-bottom:1px solid var(--rule)}
+  .arw{transform:rotate(90deg);padding:6px 0}
+}
+
+/* ---- sched list ---- */
+.sl{border-top:1.5px solid var(--rule-heavy);margin-top:12px}
+.slr{display:grid;grid-template-columns:1fr auto;gap:16px;padding:10px 2px;border-bottom:1px solid var(--rule-hair);align-items:baseline}
+.slr .sn{font-family:"Barlow Condensed",sans-serif;font-size:19px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--ink)}
+.slr .sd{font-size:14px;color:var(--ink3);margin-top:1px}
+.slr .sv{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink2);white-space:nowrap}
+
+/* ---- closed list ---- */
+.closed{margin-top:12px;border-top:1px solid var(--rule)}
+.cl{padding:10px 2px;border-bottom:1px solid var(--rule-hair);display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:baseline}
+.cl .x{font-family:"IBM Plex Mono",monospace;font-size:13.5px;color:var(--clay);font-weight:600}
+.cl .cw{font-family:"Barlow Condensed",sans-serif;font-size:18px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.03em;color:var(--ink);text-decoration:line-through;text-decoration-color:var(--clay);text-decoration-thickness:1.5px}
+.cl .cr{font-size:15px;color:var(--ink2);margin-top:2px}
+
+.cmd{font-family:"IBM Plex Mono",monospace;font-size:13px;background:var(--wash);color:var(--ink);
+  padding:9px 11px;display:block;margin-top:7px;overflow-x:auto;white-space:pre-wrap;word-break:break-all;border-left:2px solid var(--blue)}
+
+footer{margin-top:52px;border-top:2.5px solid var(--rule-heavy);padding-top:14px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink3);line-height:1.9}
+footer b{color:var(--ink2);font-weight:600}
+
+@media (max-width:640px){
+  .sheet{padding:0 14px 50px}
+  .tb-issue{text-align:left}
+  .shead .desc{margin-left:0;flex-basis:100%}
+}
+
+/* ---- print / PDF ---- */
+@media print{
+  @page{ size:letter portrait; margin:14mm 12mm 15mm; }
+  html,body{background:#fff}
+  .sheet{max-width:none;padding:0}
+  section{margin-top:24px;break-inside:auto}
+  .shead{break-after:avoid;page-break-after:avoid}
+  h3{break-after:avoid;page-break-after:avoid}
+  .planwrap{overflow:visible}
+  svg.plan{min-width:0;width:100%}
+  .tw{overflow:visible}
+  table{min-width:0;font-size:9.5pt}
+  thead{display:table-header-group}
+  tr{break-inside:avoid;page-break-inside:avoid}
+  td{padding:4px 6px}
+  thead th{position:static;font-size:7pt;padding:5px 6px}
+  .strip{break-inside:avoid}
+  .rev,.chain,.cl,.gn,.slr{break-inside:avoid;page-break-inside:avoid}
+  .titleblock{break-after:avoid}
+  footer{break-inside:avoid;font-size:8pt}
+  body{font-size:10.5pt;line-height:1.42}
+  p{margin:6px 0;max-width:none}
+  .gn .gt{font-size:10.5pt}
+  .rev p{font-size:10.5pt}
+  .sc .n{font-size:30pt}
+  h1{font-size:40pt}
+  h2{font-size:16pt}
+  .cmd{font-size:8.5pt;white-space:pre-wrap}
+  a{text-decoration:none;color:inherit}
+}
+</style>
+
+<div class="sheet">
+
+<div class="titleblock">
+  <div class="tb-main">
+    <div>
+      <h1>Roof Book</h1>
+      <div class="tb-sub">Rooftop units &middot; former Amarillo Star 14</div>
+    </div>
+    <div class="tb-issue">
+      ISSUED <b>27 AUG 2026</b><br>
+      PANEL READ <b>24 AUG 2026 06:30</b><br>
+      SHEETS <b>1.0 &ndash; 8.0</b>
+    </div>
+  </div>
+  <div class="tb-fields">
+    <div class="tbf"><div class="k">Project</div><div class="v">Power Church<small>Building activation</small></div></div>
+    <div class="tbf"><div class="k">Site</div><div class="v">8275 W Amarillo Blvd<small>Amarillo, Texas</small></div></div>
+    <div class="tbf"><div class="k">System</div><div class="v">Novar XCM.20R<small>NiagaraAX 3.5.34, orphaned</small></div></div>
+    <div class="tbf"><div class="k">Compiled from</div><div class="v">4 sources<small>1998 design, 2023 + 2026 field, live panel</small></div></div>
+  </div>
+</div>
+
+<div class="strip">
+  <div class="sc w-blue"><div class="n">26</div><div class="l">Units total<br>all now identified</div></div>
+  <div class="sc w-blue"><div class="n">14</div><div class="l">Panel reaches<br>obey a command</div></div>
+  <div class="sc w-clay"><div class="n">12</div><div class="l">No comms<br>hand control only</div></div>
+  <div class="sc w-clay"><div class="n">2</div><div class="l">Rooms over setpoint<br>108 imax &middot; 111</div></div>
+  <div class="sc w-amber"><div class="n">13</div><div class="l">Past service life<br>1998 lennox, 28 yrs</div></div>
+</div>
+
+<section>
+  <div class="shead"><span class="snum">1.0</span><h2>Roof Plan</h2><span class="desc">Positions per 1998 sheet ME1.1. Schematic, not surveyed.</span></div>
+  <p>The building's own rule: <strong>RTU-N sits directly over Auditorium 1NN.</strong> RTU-3 runs Aud 103, RTU-11 runs Aud 111. Larger houses carry an A and a B unit. West wing feeds from board DHB, east wing from DHC.</p>
+
+  <div class="legend">
+    <span><b>&#9679;</b> Reaches panel, fan running</span>
+    <span><b>&#9681;</b> Reaches panel, fan idle</span>
+    <span><b>&#9675;</b> No communication</span>
+    <span><b>&#9636;</b> Landmark</span>
+  </div>
+
+  <div class="planwrap">
+  <svg class="plan" viewBox="0 0 1060 700" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Roof plan of the former Amarillo Star 14: 26 rooftop units, roof hatch, ridge line, gas generator.">
+    <marker id="ar" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 z" fill="#0d0d0b"/></marker>
+    <path d="M 90,270 L 90,190 L 175,190 L 175,165 L 270,165 L 270,130 L 375,130 L 375,85 L 625,85 L 625,130 L 730,130 L 730,165 L 825,165 L 825,190 L 910,190 L 910,270 L 910,500 L 640,500 Q 500,618 360,500 L 90,500 Z" fill="#fbfaf6" stroke="#0d0d0b" stroke-width="2.5" stroke-linejoin="round"/>
+    <line x1="175" y1="190" x2="175" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="270" y1="165" x2="270" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="375" y1="130" x2="375" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="500" y1="85" x2="500" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="625" y1="130" x2="625" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="730" y1="165" x2="730" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="825" y1="190" x2="825" y2="270" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="90" y1="430" x2="360" y2="430" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="640" y1="430" x2="910" y2="430" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="180" y1="430" x2="180" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="270" y1="430" x2="270" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="360" y1="430" x2="360" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="640" y1="430" x2="640" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="730" y1="430" x2="730" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="820" y1="430" x2="820" y2="500" stroke="#b8b3a6" stroke-width="1"/>
+    <line x1="90" y1="270" x2="910" y2="270" stroke="#5f5b51" stroke-width="1.6" stroke-dasharray="12 5 3 5"/>
+    <text x="500" y="222" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10.5" fill="#5f5b51" letter-spacing="1.6" text-anchor="middle">RIDGE LINE &#183; ROOF SLOPES AWAY BOTH SIDES</text>
+    <text x="132" y="209" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">104</text>
+    <text x="222" y="184" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">105</text>
+    <text x="322" y="149" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">106</text>
+    <text x="437" y="104" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">107 RPX</text>
+    <text x="562" y="104" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">108 IMAX <tspan fill="#8c2f1d" font-weight="700">93&#176;F</tspan></text>
+    <text x="677" y="149" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">109</text>
+    <text x="777" y="184" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">110</text>
+    <text x="867" y="209" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">111 <tspan fill="#8c2f1d" font-weight="700">90&#176;F</tspan></text>
+    <text x="135" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">103</text>
+    <text x="225" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">102</text>
+    <text x="315" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">101</text>
+    <text x="685" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">114</text>
+    <text x="775" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">113</text>
+    <text x="865" y="449" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">112</text>
+    <text x="311" y="295" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">BOOTH W</text>
+    <text x="500" y="295" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">OFFICES</text>
+    <text x="689" y="295" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">BOOTH E</text>
+    <text x="416" y="364" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">LOBBY W</text>
+    <text x="584" y="364" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">LOBBY E</text>
+    <text x="500" y="528" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="600" fill="#302e28" text-anchor="middle" letter-spacing="0.6">ENTRY VESTIBULE</text>
+    <rect x="721" y="196" width="34" height="32" fill="#ffffff" stroke="#0d0d0b" stroke-width="2.4"/>
+    <line x1="708" y1="228" x2="740" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <line x1="718" y1="228" x2="750" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <line x1="728" y1="228" x2="760" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <line x1="738" y1="228" x2="770" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <line x1="748" y1="228" x2="780" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <line x1="758" y1="228" x2="790" y2="196" stroke="#0d0d0b" stroke-width="1.6" clip-path="inset(0)"/>
+    <rect x="721" y="196" width="34" height="32" fill="none" stroke="#0d0d0b" stroke-width="2.4"/>
+    <line x1="755" y1="200" x2="808" y2="112" stroke="#0d0d0b" stroke-width="1.2"/>
+    <circle cx="755" cy="200" r="2.8" fill="#0d0d0b"/>
+    <text x="814" y="106" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" font-weight="600" fill="#0d0d0b" letter-spacing="1.2">ROOF HATCH</text>
+    <text x="814" y="122" font-family="Barlow, sans-serif" font-size="11.5" fill="#5f5b51">you come up here</text>
+    <rect x="118" y="300" width="48" height="24" fill="#0d0d0b"/>
+    <text x="118" y="345" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12" font-weight="600" fill="#0d0d0b" letter-spacing="1.2">GAS GENERATOR</text>
+    <text x="118" y="361" font-family="Barlow, sans-serif" font-size="11.5" fill="#5f5b51">1550 lbs, on timbers</text>
+    <circle cx="910" cy="320" r="5.5" fill="none" stroke="#0d0d0b" stroke-width="2"/>
+    <circle cx="910" cy="380" r="5.5" fill="none" stroke="#0d0d0b" stroke-width="2"/>
+    <circle cx="910" cy="440" r="5.5" fill="none" stroke="#0d0d0b" stroke-width="2"/>
+    <text x="924" y="384" font-family="Barlow, sans-serif" font-size="11.5" fill="#5f5b51">roof drains</text>
+    <line x1="50" y1="128" x2="50" y2="70" stroke="#0d0d0b" stroke-width="1.8" marker-end="url(#ar)"/>
+    <text x="50" y="148" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="14" font-weight="600" fill="#0d0d0b" text-anchor="middle">N</text>
+    <rect x="112" y="232" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="132" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">4</text>
+    <rect x="202" y="232" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="222" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">5</text>
+    <rect x="278" y="232" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="298" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">6A</text>
+    <rect x="325" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="345" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">6B</text>
+    <rect x="393" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="413" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">7A</text>
+    <rect x="440" y="232" width="40" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="460" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">7B</text>
+    <rect x="518" y="232" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="538" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">8A</text>
+    <rect x="565" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="585" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">8B</text>
+    <rect x="633" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="653" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">9A</text>
+    <rect x="678" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="698" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">9B</text>
+    <rect x="758" y="232" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="778" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">10</text>
+    <rect x="847" y="232" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="867" y="247" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">11</text>
+    <rect x="290" y="304" width="42" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="311" y="319" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">17A</text>
+    <rect x="480" y="304" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="500" y="319" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">18</text>
+    <rect x="668" y="304" width="42" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="689" y="319" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">17B</text>
+    <rect x="395" y="373" width="42" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="416" y="388" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">15A</text>
+    <rect x="563" y="373" width="42" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="584" y="388" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">15B</text>
+    <rect x="115" y="465" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="135" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">3</text>
+    <rect x="205" y="465" width="40" height="22" fill="#ffffff" stroke="#8a5708" stroke-width="2.2"/><text x="225" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8a5708" text-anchor="middle">2</text>
+    <rect x="272" y="465" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="292" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">1A</text>
+    <rect x="318" y="465" width="40" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="338" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">1B</text>
+    <rect x="642" y="465" width="42" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="663" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">14A</text>
+    <rect x="689" y="465" width="42" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="710" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">14B</text>
+    <rect x="755" y="465" width="40" height="22" fill="#ffffff" stroke="#1f4e79" stroke-width="2.2"/><text x="775" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#1f4e79" text-anchor="middle">13</text>
+    <rect x="845" y="465" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="865" y="480" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">12</text>
+    <rect x="480" y="536" width="40" height="22" fill="#ffffff" stroke="#8c2f1d" stroke-width="2.2" stroke-dasharray="5 3"/><text x="500" y="551" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="12.5" font-weight="600" fill="#8c2f1d" text-anchor="middle">16</text>
+    <text x="92" y="40" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10.5" fill="#5f5b51" letter-spacing="1.8">WEST WING &#183; BOARD DHB</text>
+    <text x="908" y="40" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10.5" fill="#5f5b51" letter-spacing="1.8" text-anchor="end">EAST WING &#183; BOARD DHC</text>
+    <text x="500" y="660" font-family="IBM Plex Mono, ui-monospace, monospace" font-size="10.5" fill="#5f5b51" letter-spacing="1.8" text-anchor="middle">FRONT DOORS &amp; PARKING</text>
+    </svg>
+  </div>
+  <p class="planfoot">Diagrammatic. Unit arrangement, hatch, ridge and generator follow 1998 sheet ME1.1; block widths are drawn for legibility, not to scale. <strong>Standing at the hatch: the ridge runs left to right just in front of you, IMAX and RPX are the two big houses to your left, and the front doors are beyond them.</strong></p>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">2.0</span><h2>Unit Schedule</h2><span class="desc">Order parts from the field column, not the 1998 design.</span></div>
+  <p>Roughly half the roof was re-equipped with Trane units around the 2016 recliner conversion, at matching tonnage. The 1998 drawings still say Lennox for those slots and will send someone after the wrong part.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Unit</th><th>Serves</th><th>Tons</th><th>On roof today</th><th>Breaker</th><th>Panel</th><th>8/24</th><th>Condition and requirement</th></tr></thead>
+    <tbody>
+      <tr class="band"><td colspan="8">West wing &mdash; distribution board DHB</td></tr>
+      <tr><td class="u">1A</td><td>Aud 101</td><td class="n">4</td><td class="old">Lennox 1998</td><td class="n">2LA-37,39,41</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Bad blower 2023, still not running 2026. Replace.</td></tr>
+      <tr><td class="u">1B</td><td>Aud 101</td><td class="n">10</td><td>Trane 2016</td><td class="n">DHB-2,4,6</td><td class="st run">RUNNING</td><td class="n">75&deg;</td><td>Healthy, cooling normally.</td></tr>
+      <tr><td class="u">2</td><td>Aud 102</td><td class="n">10</td><td>Trane / Am. Standard, newest</td><td class="n">DHB-7,9,11</td><td class="st idle">IDLE</td><td class="n">70&deg;</td><td>At target. Supply sensor reads 152&deg;F with fan off &mdash; check sensor.</td></tr>
+      <tr><td class="u">3</td><td>Aud 103</td><td class="n">6</td><td class="old">Lennox 1998</td><td class="n">DHB-8,10,12</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Blower dead, compressor kicks. Replace.</td></tr>
+      <tr><td class="u">4</td><td>Aud 104</td><td class="n">6</td><td class="old">Lennox 1998</td><td class="n">DHB-13,15,17</td><td class="st idle">IDLE</td><td class="n">72&deg;</td><td>Needs heat and cool work.</td></tr>
+      <tr><td class="u">5</td><td>Aud 105</td><td class="n">8.5</td><td class="old">Lennox 1998</td><td class="n">DHB-14,16,18</td><td class="st idle">IDLE</td><td class="n">71&deg;</td><td>Bad combustion fan motor. Cools, will not heat.</td></tr>
+      <tr><td class="u">6A</td><td>Aud 106</td><td class="n">4</td><td class="old">Lennox 1998</td><td class="n">DHB-19,21,23</td><td class="st idle">IDLE</td><td class="n">71&deg;</td><td>Fired clean 2023. No 2026 note.</td></tr>
+      <tr><td class="u">6B</td><td>Aud 106</td><td class="n">10</td><td>Trane 2016</td><td class="n">DHB-20,22,24</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Healthy in 2023. Likely a comms fault, not a dead unit.</td></tr>
+      <tr><td class="u">7A</td><td>Aud 107 RPX</td><td class="n">7.5</td><td class="old">Lennox 1998</td><td class="n">DHB-43,45,47</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Contactor stuck, disconnect will not turn on.</td></tr>
+      <tr><td class="u">7B</td><td>Aud 107 RPX</td><td class="n">15</td><td>Trane 2016</td><td class="n">DHB-25,27,29</td><td class="st run">RUNNING</td><td class="n">77&deg;</td><td>Cooling, supply 63&deg;F.</td></tr>
+      <tr><td class="u">15A</td><td>Lobby &amp; promenade</td><td class="n">20</td><td>Trane 2016</td><td class="n">DHB-55,57,59</td><td class="st run">RUNNING</td><td class="n">80&deg;</td><td>Cooling. Large volume, slow pull-down.</td></tr>
+      <tr><td class="u">17A</td><td>Projection booth</td><td class="n">12.5</td><td class="old">Lennox 1998</td><td class="n">DHB-31,33,35</td><td class="st idle">IDLE</td><td class="n">74&deg;</td><td>OA dampers damaged, tech left it switched off in 2023. Replace.</td></tr>
+      <tr><td class="u">18</td><td>Offices &amp; upper lobby</td><td class="n">6</td><td class="old">Lennox 1998</td><td class="n">DHB-49,51,53</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Runs, but stuck and disconnected &mdash; will not turn off.</td></tr>
+
+      <tr class="band"><td colspan="8">East wing &mdash; distribution board DHC</td></tr>
+      <tr><td class="u">8A</td><td>Aud 108 IMAX</td><td class="n">7.5</td><td class="old">Presumed Lennox 1998</td><td class="n">DHC-43,45,47</td><td class="st idle">IDLE</td><td class="n">93&deg;</td><td><strong>Room hot, unit not cooling.</strong> No field record from anyone, ever. Walk first.</td></tr>
+      <tr><td class="u">8B</td><td>Aud 108 IMAX</td><td class="n">15</td><td>Trane 2016</td><td class="n">DHC-1,3,5</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Healthy 2023 and 2026, but invisible to the panel. IMAX has no working AC.</td></tr>
+      <tr><td class="u">9A</td><td>Aud 109</td><td class="n">4</td><td class="old">Lennox 1998</td><td class="n">DHC-2,4,6</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Bad blower motor since 2023. Replace.</td></tr>
+      <tr><td class="u">9B</td><td>Aud 109</td><td class="n">10</td><td class="old">Lennox 1998</td><td class="n">DHC-7,9,11</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Compressors kick, blower and heat do not. Loose panels. Replace.</td></tr>
+      <tr><td class="u">10</td><td>Aud 110</td><td class="n">8.5</td><td class="old">Lennox 1998</td><td class="n">DHC-8,10,12</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Cools, no heat, bad inducer motor. Replace.</td></tr>
+      <tr><td class="u">11</td><td>Aud 111</td><td class="n">6</td><td>Trane 2016</td><td class="n">DHC-13,15,17</td><td class="st idle">IDLE</td><td class="n">90&deg;</td><td><strong>Room hot.</strong> Power at the board, will not run heat or cool. Newer unit &mdash; diagnose before replacing.</td></tr>
+      <tr><td class="u">12</td><td>Aud 112</td><td class="n">6</td><td>Trane 2016</td><td class="n">DHC-14,16,18</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Heat and cool work. Electrical door missing, everything got wet. Likely why comms died.</td></tr>
+      <tr><td class="u">13</td><td>Aud 113</td><td class="n">10</td><td>Trane 2016</td><td class="n">DHC-19,21,23</td><td class="st run">RUNNING</td><td class="n">76&deg;</td><td>Best unit on the roof. Heat and cool both confirmed.</td></tr>
+      <tr><td class="u">14A</td><td>Aud 114</td><td class="n">4</td><td class="old">Lennox 1998</td><td class="n">DHC-20,22,24</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Fired clean 2023. Likely comms, not the unit.</td></tr>
+      <tr><td class="u">14B</td><td>Aud 114</td><td class="n">10</td><td>Trane 2016</td><td class="n">DHC-25,27,29</td><td class="st run">RUNNING</td><td class="n">76&deg;</td><td>Supply air 51&deg;F. Working exactly as intended.</td></tr>
+      <tr><td class="u">15B</td><td>Lobby &amp; promenade</td><td class="n">20</td><td>Trane 2016</td><td class="n">DHC-49,51,53</td><td class="st idle">IDLE</td><td class="n">80&deg;</td><td>Sitting at its 80&deg;F setback target, which is why it is not running.</td></tr>
+      <tr><td class="u">16</td><td>Entry vestibule</td><td class="n">12.5</td><td class="old">Lennox 1998</td><td class="n">DHC-55,57,59</td><td class="st off">NO COMMS</td><td class="n">&mdash;</td><td>Needed transformer and fuses 2023. <strong>By 2026 no power at all.</strong> Same corner as the dead lobby lighting circuit.</td></tr>
+      <tr><td class="u">17B</td><td>Projection booth</td><td class="n">10</td><td>Trane 2016</td><td class="n">DHC-31,33,35</td><td class="st run">RUNNING</td><td class="n">79&deg;</td><td>Blower runs, errors on heat and cool. Supply reading 31&deg;F suggests a sensor fault.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">3.0</span><h2>Unit Identification</h2><span class="desc">The stencils faded. Three of four recovered from paper.</span></div>
+  <p>Texas Air found several units with no readable tag in July and described them by position: <em>"the Lennox between RTU-1B and the American Standard."</em> That reads like a dead end. The 2023 walkthrough had recorded <strong>serial numbers</strong> for the same units without knowing their positions. Matching the two lists supplies both halves.</p>
+
+  <div class="gnotes">
+    <div class="gn"><div class="gi">3.1</div><div class="gt"><b>"Lennox between RTU-1B and the American Standard" = RTU-1A.</b> Serial 5699D02422 matches the untagged 4-ton Lennox logged in 2023 with a bad blower, and position confirms it &mdash; 1A is 1B's pair. The American Standard beside it is <b>RTU-2</b>, the newest unit on the roof.</div></div>
+    <div class="gn"><div class="gi">3.2</div><div class="gt"><b>"Trane between RTU-12 and RTU-11" = RTU-17B.</b> Serial 185015437L is an exact match to the projection booth unit, which sits in that cluster on the roof plan.</div></div>
+    <div class="gn"><div class="gi">3.3</div><div class="gt"><b>"Lennox in the middle in front of RTU-10" = RTU-9A.</b> Model GCS20-048-120-1G matches exactly, and 9A sits beside RTU-10 &mdash; the roof hatch is drawn between them.</div></div>
+    <div class="gn flag"><div class="gi">3.4</div><div class="gt"><b>"Lennox in front of RTU-13", model REMD16M-65-2 &mdash; still unidentified.</b> Appears in no schedule we hold. Likely one of the split-system condensers serving the ticket booths and workroom rather than a rooftop unit. Needs eyes on the nameplate.</div></div>
+  </div>
+
+  <div class="rev info">
+    <div class="rt">Permanent fix</div>
+    <p>Sheet note 11 of the 1998 set required every unit stenciled in 2-inch black letters with its number and the area served. That stencil is gone. <strong>Re-stencil all 26 on the first roof walk</strong> and this problem never returns. It is a can of paint.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">4.0</span><h2>Operation</h2><span class="desc">Three routes, depending on the unit.</span></div>
+
+  <div class="gnotes">
+    <div class="gn"><div class="gi">4.1</div><div class="gt"><b>From a phone, for the 14 units the panel reaches.</b> Get on the panel's local network, open the dashboard, press Start Cooling. Runs one hour, reverts on its own. This is the panel's designed after-hours override, so units keep their normal compressor safeties.</div></div>
+    <div class="gn"><div class="gi">4.2</div><div class="gt"><b>From the panel itself, same 14 units.</b> Browse to <span class="mono">http://192.168.1.123</span> and sign in. The panel's built-in screen is a dead Java applet and shows blank; the working route is the data interface behind it, which is what the dashboard uses.</div></div>
+    <div class="gn flag"><div class="gi">4.3</div><div class="gt"><b>At the unit, for the 12 the panel cannot reach.</b> These will not answer any command from the office. Someone goes to the roof and uses the disconnect on the unit. This is the entire reason the no-comms list matters.</div></div>
+  </div>
+
+  <div class="rev">
+    <div class="rt">Limit</div>
+    <p>A cooling command only reaches the 14 units that are talking. Aud 108 is the clearest case: 93&deg;F, one unit idle and the other invisible to the panel. No amount of pressing buttons cools that room today.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">5.0</span><h2>Occupancy Schedules</h2><span class="desc">All five still on the theater's operating day.</span></div>
+  <p>The panel runs five named schedules. Every one is still set to Regal's movie hours, which is why rooms sit in setback when you expect them cool.</p>
+
+  <div class="sl">
+    <div class="slr"><div><div class="sn">Store Schedule</div><div class="sd">The master day. Last edited March 2022.</div></div><div class="sv">OPENS 11:00</div></div>
+    <div class="slr"><div><div class="sn">Employee Schedule</div><div class="sd">Shadows the store day, offset earlier. Edited 16 Aug 2026, not by us &mdash; worth asking who.</div></div><div class="sv">OPENS 10:30</div></div>
+    <div class="slr"><div><div class="sn">Auditorium Employee</div><div class="sd">Untouched since July 2015.</div></div><div class="sv">OPENS 12:30</div></div>
+    <div class="slr"><div><div class="sn">Exterior Schedule</div><div class="sd">Parking and exterior lighting. Edited Aug 2022.</div></div><div class="sv">OPENS 17:30</div></div>
+    <div class="slr"><div><div class="sn">Battery Pack / Emergency</div><div class="sd">Effectively always on. Next change not until November.</div></div><div class="sv">ALWAYS OPEN</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">6.0</span><h2>Control Replacement Plan</h2><span class="desc">Two live paths. They cover different units.</span></div>
+
+  <p>The panel's weekly calendar can only be edited with Niagara Workbench, which is version-locked to this generation and sold only to certified contractors. We asked the one person best placed to obtain it.</p>
+
+  <div class="rev">
+    <div class="rt">Keith Svonovec, BGIS &mdash; 25 Aug 2026</div>
+    <p><strong>"AX Novar is no longer. Novar won't budge. I tried previously."</strong></p>
+    <p>He already tried on his own account and was refused. The official route to the schedule is closed. Nobody spends another dollar or another week on it.</p>
+  </div>
+
+  <h3>6.1 &nbsp; The Raspberry Pi &mdash; for the 14 units that still answer</h3>
+  <p>The plan does not fight the software. <strong>It moves the schedule off the panel entirely.</strong> A small computer holds the church's real hours and presses the same button a person would press, on a clock instead of by hand. Regal's five schedules stay untouched underneath.</p>
+
+  <div class="chain">
+    <div class="ch"><div class="ck">Anyone, any phone</div><div class="cn">Church WiFi</div><div class="cd">Open a bookmark. No app, no panel login, no laptop plugged into anything.</div></div>
+    <div class="arw">&rarr;</div>
+    <div class="ch mid"><div class="ck">The bridge</div><div class="cn">Raspberry Pi</div><div class="cd">Two connections at once: WiFi to the church, cable to the panel. Holds the dashboard, the password, and the hours file.</div></div>
+    <div class="arw">&rarr;</div>
+    <div class="ch"><div class="ck">192.168.1.123</div><div class="cn">Novar panel</div><div class="cd">Receives the same override we tested by hand and passes it to the 14 units it can reach.</div></div>
+  </div>
+
+  <div class="gnotes">
+    <div class="gn"><div class="gi">a</div><div class="gt"><b>A plain hours file.</b> One small file lists the days and times cooling should run. Editing it is editing a list, not programming a building.</div></div>
+    <div class="gn"><div class="gi">b</div><div class="gt"><b>The Pi checks the time once a minute</b> and works out whether the building should be cooling or coasting.</div></div>
+    <div class="gn"><div class="gi">c</div><div class="gt"><b>It only acts on a change.</b> When the answer flips it sends the identical command the Start Cooling button sends. It does not re-send every minute, so the panel is never spammed.</div></div>
+    <div class="gn"><div class="gi">d</div><div class="gt"><b>The Pi becomes the real schedule.</b> Church hours live there. Regal's movie hours stay dormant underneath, harmless, never edited.</div></div>
+  </div>
+
+  <div class="rev warn">
+    <div class="rt">Three limits before anyone counts on it</div>
+    <p><strong>Turning cooling on is proven. Turning it off is not yet.</strong> We fired the on command against the real panel 23 Aug and watched units engage. The off path uses a value not yet tested on live equipment. We learn at the first real transition, with someone watching.</p>
+    <p><strong>Whole-building, not per-room.</strong> Same as the manual button. It cannot schedule Aud 109 differently from the lobby.</p>
+    <p><strong>The lighting buttons will look like they work and won't.</strong> Keith's read is this building never had much interior lighting on the panel to begin with, so it is not a fault awaiting repair.</p>
+  </div>
+
+  <h3>6.2 &nbsp; Status and the two fixes</h3>
+  <p>Code written and reviewed. No physical Pi built yet. Hardware is roughly <strong>$165 once</strong> for a complete Pi 5 kit; WiFi and ethernet are built in, so no adapters.</p>
+  <div class="gnotes">
+    <div class="gn"><div class="gi">i</div><div class="gt"><b>The network config needs replacing.</b> Written for the older dhcpcd system, but current Raspberry Pi OS uses NetworkManager, so the static address would silently never apply.<span class="cmd">nmcli connection add type ethernet ifname eth0 con-name panel-eth0 ipv4.addresses 192.168.1.51/24 ipv4.method manual ipv4.never-default yes</span></div></div>
+    <div class="gn"><div class="gi">ii</div><div class="gt"><b>Give the Pi .51, not .50.</b> A laptop plugged in at the same time would collide on .50, which is what we used on 23 Aug.</div></div>
+    <div class="gn"><div class="gi">iii</div><div class="gt"><b>Add a PIN before the link travels.</b> Fine unlocked while it is only reachable on church WiFi. The moment it is forwarded to the internet it needs a login first.</div></div>
+  </div>
+  <p>Worth saying plainly: the Pi build is <strong>better than what we ran on 23 Aug</strong>, because the panel password lives only on the Pi and never sits in anyone's phone browser.</p>
+
+  <h3>6.3 &nbsp; Thermostats &mdash; for the 12 the panel cannot reach</h3>
+  <p>Keith's recommendation, and it is incremental rather than all at once: <em>"start to put RTU's on thermostats as they go offline."</em> Roughly <strong>$150&ndash;350 per unit plus labor</strong>, commercial multi-stage, not a home thermostat. Sam Patton has asked him to name a specific WiFi or BACnet model; that answer is pending.</p>
+
+  <h3>6.4 &nbsp; Closed. Do not reopen these in a meeting.</h3>
+  <div class="closed">
+    <div class="cl"><span class="x">&times;</span><div><div class="cw">Old AX Workbench</div><div class="cr">Does not exist. Keith tried to obtain it himself and Novar refused.</div></div></div>
+    <div class="cl"><span class="x">&times;</span><div><div class="cw">Current Niagara Workbench</div><div class="cr">Cannot be purchased without a certification number, and the current version targets migrating off our generation rather than running it.</div></div></div>
+    <div class="cl"><span class="x">&times;</span><div><div class="cw">Remanufactured EMS controllers, $350&ndash;500 each</div><div class="cr">Buys nothing. <strong>Restoring a unit's communication does not give the schedule back</strong> &mdash; the schedule is locked behind software we cannot get, not behind the comms. Same position, minus the money.</div></div></div>
+    <div class="cl"><span class="x">&times;</span><div><div class="cw">Migrating the panel to N4</div><div class="cr">Wrong direction. Thousands to modernize the brain of a system whose unit controllers are obsolete and which we are already leaving one thermostat at a time.</div></div></div>
+  </div>
+
+  <div class="rev info">
+    <div class="rt">The plan in one sentence</div>
+    <p><strong>The Pi runs the schedule for the 14 units that still answer. Thermostats take over each of the other 12 as we get to them.</strong> The panel keeps doing the one job it is still good at, and we stop trying to win back the part that is gone.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">7.0</span><h2>Field Notes</h2><span class="desc">Keith Svonovec, BGIS &mdash; 25 Aug 2026</span></div>
+  <p>Keith has serviced this exact panel. His notes change three things we were treating as unknown and hand us one practical trick.</p>
+
+  <div class="rev warn">
+    <div class="rt">The 12 offline units may be self-regulating</div>
+    <p><em>"If still on EMS and not communicating but controlled by EMS, I think the backup setpoints are 74 cooling and 67 heating."</em></p>
+    <p>A unit cut off from the panel can still hold roughly <strong>74&deg;F on its own internal fallback</strong>. It is not necessarily doing nothing. He hedged with "I think," so treat it as a lead to verify &mdash; testable for free with a thermometer in rooms served only by offline units.</p>
+    <p><strong>One room already argues against it.</strong> Aud 108 sat at 93&deg;F with its only other unit offline. If that fallback were holding, the room would not be at 93&deg;F. So either it is not running there, or that unit has genuinely failed.</p>
+  </div>
+
+  <div class="gnotes">
+    <div class="gn"><div class="gi">7.1</div><div class="gt"><b>Check whether some units already have thermostats.</b> A possibility nobody had considered: some of the 12 may read as offline because their EMS controllers were already removed and thermostats fitted at some point. If so, those units are not broken and need nothing. Free to check on the roof walk, and it could shrink the problem list on the spot.</div></div>
+    <div class="gn"><div class="gi">7.2</div><div class="gt"><b>Verify power at the unit first.</b> His first diagnostic before anything else. RTU-16 is the proof case &mdash; no power at all.</div></div>
+    <div class="gn"><div class="gi">7.3</div><div class="gt"><b>The wiring trick that saves real money.</b> Each RTU already has a wire running down to its room. Use that existing wire as a <b>pull string</b> for new thermostat cable, since the old wire almost certainly lacks enough conductors. That turns a conduit-fishing job into a pull-through.</div></div>
+    <div class="gn"><div class="gi">7.4</div><div class="gt"><b>Or mount the stat at the existing sensor and lock it.</b> Every auditorium already has a wall sensor at 72 inches by the vestibule door. Putting the thermostat there avoids new wire entirely; lock it with software or a plastic guard.</div></div>
+    <div class="gn"><div class="gi">7.5</div><div class="gt"><b>The interior lighting mystery is explained, not broken.</b> <em>"Lighting most likely just exterior was done in the past. Many of the old theatres didn't have much interior lighting control."</em> That matches what we found live. Stop treating it as a fault to repair.</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="snum">8.0</span><h2>Work List</h2><span class="desc">All five happen on one roof walk.</span></div>
+  <p>Take a thermometer, a camera, a can of stencil paint, and this page.</p>
+
+  <div class="gnotes">
+    <div class="gn flag"><div class="gi">8.1</div><div class="gt"><b>Walk RTU-8A first.</b> It runs IMAX, the hottest room in the building at 93&deg;F, and it is the one unit with no inspection record from anybody, ever.</div></div>
+    <div class="gn"><div class="gi">8.2</div><div class="gt"><b>On each of the 12 offline units, answer Keith's two questions.</b> Does it have power? Does it still have its EMS controller, or did someone already fit a thermostat? Either answer can remove a unit from the list for free. Several were mechanically healthy at last inspection &mdash; 6B, 8B, 12 and 14A all fired clean.</div></div>
+    <div class="gn"><div class="gi">8.3</div><div class="gt"><b>Take room temperatures while you are there.</b> Rooms served only by offline units tell you whether the 74&deg;F fallback is actually holding. That single reading decides how urgent the thermostat spend really is.</div></div>
+    <div class="gn"><div class="gi">8.4</div><div class="gt"><b>Re-stencil all 26.</b> A can of paint permanently ends the identification problem that cost two field visits and a week of paperwork.</div></div>
+    <div class="gn"><div class="gi">8.5</div><div class="gt"><b>Trace the entry-vestibule power.</b> RTU-16 has no power and the lobby's left-wall lighting circuit is dead. Two independent findings, same corner, months apart. One electrician visit likely explains both.</div></div>
+  </div>
+
+  <h3>Capital exposure</h3>
+  <p>The real question is not "replace the HVAC." It is <strong>replace the 13 remaining 1998 Lennox units, on a schedule.</strong> The 12 Trane units are about 11 years old with a decade left, and not one of them had a fault in 2023. At Texas Air's own stated ballpark of $25k&ndash;$35k per unit, those 13 represent roughly <strong>$325k&ndash;$455k</strong>. That is a planning figure from a service invoice, not a bid. Get real quotes before it goes near a lender.</p>
+
+  <div class="rev info">
+    <div class="rt">Where a church connection actually saves money</div>
+    <p>Diagnosing comms faults, replacing a transformer and fuses, pulling thermostat wire and re-stenciling are ordinary HVAC trade work &mdash; a congregant's crew can do all of it. Programming the Novar panel is a different, specialized trade. Split the ask that way and volunteer help lands where it genuinely helps.</p>
+  </div>
+</section>
+
+<footer>
+  <b>SOURCES</b> &nbsp; 1998 EnviroDesign / Stotser MEP set, sheets M4.1 and ME1.1 &mdash; 26-unit schedule, roof positions, breaker assignments &middot; Allen's Tri-State Mechanical roof walkthrough Nov 2023 &mdash; make, age, serial, fired or not &middot; Texas Air invoice 11419, 9 Jul 2026 &mdash; current condition, replacement ballpark &middot; Novar XCM.20R panel read live 24 Aug 2026 06:30 &mdash; comms status, zone temperature, setpoint, fan state &middot; Keith Svonovec, BGIS, correspondence 21 and 25 Aug 2026<br><br>
+  <b>NOTE</b> &nbsp; Live temperatures are one snapshot taken during an active cooling override, not a steady-state reading. Unit identities in sheet 3.0 are inferences from matching serial numbers and models across two independent field reports; they are strong but should be confirmed against the nameplate on the first roof walk.
+</footer>
+
+</div>

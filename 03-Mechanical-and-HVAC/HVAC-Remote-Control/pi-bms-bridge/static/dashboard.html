@@ -1,0 +1,318 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/favicon-180.png">
+<title>Power Church · Building Controls</title>
+<style>
+:root{
+  --surface-2:#ffffff; --surface-1:#f6f7f8; --surface-0:#eef0f2;
+  --text-primary:#1a1d21; --text-secondary:#5c6570; --text-muted:#8a93a0;
+  --border:#e3e6ea; --border-strong:#cfd4da;
+  --accent:#0e63b3; --on-accent:#ffffff; --bg-accent:#e6f1fb; --text-accent:#0c447c;
+  --warn:#b8860b; --bg-warn:#faeeda; --text-warn:#854f0b;
+  --bad:#a3402d; --bg-bad:#faece7; --text-bad:#712b13;
+  --ok:#0f6e56; --bg-ok:#e1f5ee; --text-ok:#085041;
+  --radius:10px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);font:15px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:0 0 24px}
+.card{background:var(--surface-2);border:0.5px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;align-items:center;padding:16px}
+.top h1{font-size:16px;margin:0;font-weight:500}
+.top .sub{color:var(--text-secondary);font-size:12px;margin-top:2px}
+.pill{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;padding:4px 10px;border-radius:999px}
+.pill.ok{background:var(--bg-ok);color:var(--text-ok)}
+.pill.bad{background:var(--bg-bad);color:var(--text-bad)}
+.dotpill{width:7px;height:7px;border-radius:50%;background:currentColor;display:inline-block}
+.sec{padding:14px 16px;border-top:0.5px solid var(--border)}
+.sec:first-child{border-top:none}
+.sec .h{font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border)}
+.stat{background:var(--surface-2);padding:12px 16px}
+.stat .k{font-size:11px;color:var(--text-secondary)}
+.stat .v{font-size:20px;font-weight:500;margin-top:2px}
+.stat .n{font-size:11px;color:var(--text-muted);margin-top:2px}
+button{cursor:pointer;font:inherit;border-radius:var(--radius);padding:11px 10px;font-size:13px;font-weight:500;border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary)}
+button.primary{background:var(--accent);color:var(--on-accent);border:0}
+button.warn{background:var(--warn);color:#fff;border:0}
+button:active{transform:scale(.98)}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.row:last-child{border-bottom:none}
+.row .lbl{color:var(--text-primary);font-size:13px}
+.row .rv{font-weight:500;text-align:right;font-size:13px;color:var(--text-secondary)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500}
+.badge.ok{color:var(--text-ok)}.badge.warn{color:var(--text-warn)}.badge.bad{color:var(--text-bad)}.badge.na{color:var(--text-muted)}
+.alert{display:flex;gap:8px;padding:9px 10px;border-radius:var(--radius);margin-bottom:6px}
+.alert:last-child{margin-bottom:0}
+.alert.bad{background:var(--bg-bad)}
+.alert.warn{background:var(--bg-warn)}
+.alert .t{font-size:12px;font-weight:500}
+.alert .d{font-size:11px;margin-top:1px}
+.alert.bad .t,.alert.bad .d{color:var(--text-bad)}
+.alert.warn .t,.alert.warn .d{color:var(--text-warn)}
+.muted{color:var(--text-muted);font-size:12px}
+.hoasel{font-size:12px;padding:5px 8px;border-radius:var(--radius);border:0.5px solid var(--border-strong);background:var(--surface-2);color:var(--text-primary)}
+.hoasel:disabled{background:var(--surface-1);color:var(--text-muted);border-color:var(--border)}
+.lockrow{display:flex;align-items:center;gap:6px}
+.foot{padding:14px 16px;font-size:12px;color:var(--text-secondary)}
+code{background:var(--surface-1);padding:1px 5px;border-radius:4px;font-size:11px}
+#setupNote{background:var(--bg-warn);color:var(--text-warn);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="setupNote">
+    This page works from any device on the church WiFi — a Raspberry Pi wired into the panel relays everything.
+    If sections below say "reconnecting", check that the Pi bridge is powered on and still wired to the panel.
+  </div>
+
+  <div class="card">
+    <div class="top">
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="/static/logo.png" alt="Power Church logo" style="width:34px;height:34px;border-radius:50%;flex-shrink:0">
+        <div><h1>Power Church</h1><div class="sub" id="store">reading…</div></div>
+      </div>
+      <div class="pill ok" id="conn"><span class="dotpill"></span>connecting…</div>
+    </div>
+    <div class="grid4">
+      <div class="stat"><div class="k">Outdoor temp</div><div class="v" id="statTemp">—</div><div class="n" id="statTempN"></div></div>
+      <div class="stat"><div class="k">Active alerts</div><div class="v" id="statAlarms">—</div><div class="n">panel + down units</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">
+      <a href="/units" style="display:block;text-align:center;background:var(--accent);color:var(--on-accent);text-decoration:none;font-weight:600;font-size:15px;padding:14px;border-radius:10px;margin-bottom:14px">Control each room individually &rarr;</a>
+      <div class="h">Climate control</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div>
+          <div style="font-size:14px;font-weight:500" id="ctlStatus">Mode: reading…</div>
+          <div style="font-size:12px;color:var(--text-secondary)" id="ctlSub"></div>
+        </div>
+      </div>
+      <div class="grid2">
+        <button class="primary" id="bCool">Start cooling · 1 hr</button>
+        <button id="bHold">Hold on</button>
+      </div>
+      <div class="grid2" style="margin-top:8px">
+        <button id="bAuto">Return to schedule</button>
+        <div></div>
+      </div>
+      <div class="muted" style="margin-top:10px">Override is the panel's designed after-hours button — units stay on their own safety logic.</div>
+    </div>
+
+    <div class="sec">
+      <div class="h">Pi schedule <span class="muted" id="schedMeta"></span></div>
+      <div id="schedStatus" class="muted">reading…</div>
+      <div class="muted" style="margin-top:6px">
+        This replaces the panel's own old schedules — edit <code>schedule.json</code> on the Pi and restart the
+        service to change hours.
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="h">Lighting</div>
+      <div class="grid2">
+        <button id="bLint">Interior on</button>
+        <button id="bLext">Exterior on</button>
+      </div>
+      <div class="grid2" style="margin-top:8px">
+        <button id="bLall">All lights on</button>
+        <button id="bLoff">Lights auto</button>
+      </div>
+      <div class="muted" style="margin-top:10px" id="ltStatus"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">
+      <div class="h">Alerts</div>
+      <div id="alerts"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec"><div class="h">Occupancy schedules</div><div id="sch"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="sec">
+      <div class="h">Rooftop units — Hand / Off / Auto</div>
+      <div class="muted" style="margin-bottom:8px">
+        Showing live status. Switching these is disabled for now — forcing individual units wasn't part of what
+        was tested on 8/23, so this stays read-only until Keith confirms it's safe.
+      </div>
+      <div id="hoa"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec">
+      <div class="h">Rooftop unit temperatures</div>
+      <div class="muted" style="margin-bottom:8px">Zone (space) temp vs. active setpoint, per unit. Read-only.</div>
+      <div id="rtuTemps">reading…</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="sec"><div class="h">Sensors and system inputs</div><div id="ni"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="foot">
+      Live mirror and control of the Novar/Opus panel, relayed through a Raspberry Pi wired into the panel's
+      network — no Java, no app install, no Claude needed. Auto-refreshes every 20s. Full write-up in
+      <code>BUILDING-SYSTEMS-AND-ACCESS.md</code>.
+    </div>
+  </div>
+
+</div>
+<script>
+const F = '/api/obix/config/';
+const ox = async (p) => new DOMParser().parseFromString(await (await fetch(p,{headers:{Accept:'text/xml'}})).text(),'text/xml');
+const ch = (d) => [...d.documentElement.children];
+const disp = (e) => e.getAttribute('display') || e.getAttribute('val') || '';
+const byName = (d,n) => { const e = ch(d).find(x=>x.getAttribute('name')===n); return e ? disp(e) : null; };
+const parse = (s) => { s=s||''; const m=s.match(/\{([^}]*)\}/); return {v:(s.split('{')[0].trim())||'—', status: m?m[1]:''}; };
+const badgeOf = (st) => !st||st==='null' ? 'na' : st==='ok' ? 'ok' : st==='alarm' ? 'bad' : 'warn';
+const clean = (dn,nm) => dn || (nm||'').replace(/\$([0-9a-fA-F]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+const post = (u,b) => fetch(u,{method:'POST',headers:{'Content-Type':'text/xml'},body:b||'<obj/>'}).then(r=>r.text());
+const rd = (u) => fetch(u,{headers:{Accept:'text/xml'}}).then(r=>r.text());
+
+window.bmsCtlStatus = async () => { try {
+  const mode = (await rd(F+'SetpointsOVRD/CheckoutOVRD/out/')).match(/val="([^"]+)"/)?.[1] || '?';
+  const rem = (await rd(F+'SetpointsOVRD/CoolingOvrd/TimeRemain/')).match(/display="([^"]+)"/)?.[1] || '';
+  const el = document.getElementById('ctlStatus'), sub = document.getElementById('ctlSub');
+  el.textContent = 'Mode: ' + mode + (mode==='Cooling' ? ' · cooling now' : '');
+  el.style.color = mode==='Cooling' ? 'var(--text-accent)' : (mode==='Inactive' ? 'var(--text-primary)' : 'var(--text-warn)');
+  sub.textContent = (mode==='Cooling' && rem && rem!=='0ms') ? ('auto-reverts in '+rem) : '';
+} catch(e){} };
+
+window.bmsSchedStatus = async () => { try {
+  const r = await fetch('/api/schedule');
+  const s = await r.json();
+  const el = document.getElementById('schedStatus');
+  const meta = document.getElementById('schedMeta');
+  if (!s.enabled) { el.textContent = 'Disabled — set "enabled": true in schedule.json'; return; }
+  el.textContent = 'Should be ' + (s.should_be_on ? 'ON' : 'OFF') + ' right now'
+    + (s.last_applied===null ? ' (not yet applied — waking up)' : s.last_applied===s.should_be_on ? ' · applied' : ' · applying…');
+  meta.textContent = '· ' + new Date(s.now).toLocaleTimeString();
+} catch(e){ document.getElementById('schedStatus').textContent = 'Could not read schedule status.'; } };
+
+window.bmsAction = async (a) => {
+  const msg = {cool1h:'Start cooling for 1 hour? Auto-reverts after.', hold:'Hold cooling on until you press Return to Schedule?', auto:'Return to the schedule now?'}[a];
+  if (!window.confirm(msg)) return;
+  try {
+    if (a==='cool1h') await post(F+'SetpointsOVRD/CoolingOvrd/fire/');
+    if (a==='hold') await post(F+'SetpointsOVRD/CheckoutOVRD/set/','<enum val="Cooling"/>');
+    if (a==='auto') { await post(F+'SetpointsOVRD/CheckoutOVRD/auto/'); await post(F+'SetpointsOVRD/CoolingOvrd/timerExpired/'); }
+    setTimeout(window.bmsCtlStatus, 900);
+  } catch(e){ alert('Write failed: '+e); }
+};
+
+const LI = F+'Lighting/ZoneLtsInt/', LE = F+'Lighting/ZoneLtsExtLS/';
+window.bmsLights = async (a) => {
+  const msg = {int:'Turn interior lights on?', ext:'Turn exterior/parking lights on?', all:'Turn all lights on?', off:'Return lights to auto?'}[a];
+  if (!window.confirm(msg)) return;
+  try {
+    if (a==='int'||a==='all') await post(LI+'Override1/fire/');
+    if (a==='ext'||a==='all') await post(LE+'Override1/fire/');
+    if (a==='off') { await post(LI+'Override1/timerExpired/'); await post(LE+'Override1/timerExpired/'); }
+    setTimeout(window.bmsLightStatus, 900);
+  } catch(e){ alert('Light write failed: '+e); }
+};
+window.bmsLightStatus = async () => { try {
+  const i = (await rd(LI+'ZoneLts/')).match(/display="([^"]+)"/)?.[1] || '?';
+  const e = (await rd(LE+'ZoneLts/')).match(/display="([^"]+)"/)?.[1] || '?';
+  document.getElementById('ltStatus').textContent = 'Lights commanded — interior: '+i+'   ·   exterior: '+e;
+} catch(err){} };
+
+document.getElementById('bCool').onclick = () => window.bmsAction('cool1h');
+document.getElementById('bHold').onclick = () => window.bmsAction('hold');
+document.getElementById('bAuto').onclick = () => window.bmsAction('auto');
+document.getElementById('bLint').onclick = () => window.bmsLights('int');
+document.getElementById('bLext').onclick = () => window.bmsLights('ext');
+document.getElementById('bLall').onclick = () => window.bmsLights('all');
+document.getElementById('bLoff').onclick = () => window.bmsLights('off');
+
+const RTU_LABELS = {
+  RTU1A:'Auditorium 1A', RTU1B:'Auditorium 1B', RTU2:'Auditorium 2', RTU3:'Auditorium 3',
+  RTU4:'Auditorium 4', RTU5:'Auditorium 5', RTU6A:'Auditorium 6A', RTU7B:'Auditorium 7B',
+  RTU8A:'Auditorium 8A', RTU9A:'Auditorium 9A', RTU11:'Auditorium 11', RTU13:'Auditorium 13',
+  RTU14B:'Auditorium 14', RTU15A:'Lobby A', RTU15B:'Lobby B', RTU16:'Vestibule',
+  RTU17A:'Booth A', RTU17B:'Booth B'
+};
+
+window.bmsRtuTemps = async () => { try {
+  const el = document.getElementById('rtuTemps');
+  const netDoc = await ox(F + 'Drivers/NovarnetNetwork/');
+  const names = ch(netDoc).filter(e => /^RTU/.test(e.getAttribute('name')||'')).map(e => e.getAttribute('name'));
+  const results = await Promise.all(names.map(async (n) => {
+    try {
+      const s = await rd(F + `Drivers/NovarnetNetwork/${n}/RTUInterface/RTUStatusOutV3/`);
+      const num = (attr) => { const m = s.match(new RegExp(`name="${attr}"[^>]*val="([^"]*)"`)); return m ? m[1] : null; };
+      const zone = parseFloat(num('ZoneTemperature'));
+      const setp = parseFloat(num('ActiveSetpoint'));
+      const down = num('RTUDown') === 'true', stale = num('RTUStale') === 'true';
+      const offline = down || stale || !isFinite(zone) || zone === 0;
+      return { n, label: RTU_LABELS[n] || n, zone, setp, offline };
+    } catch(e) { return { n, label: RTU_LABELS[n] || n, offline: true }; }
+  }));
+  results.sort((a,b) => a.label.localeCompare(b.label));
+  el.innerHTML = results.map(r => {
+    if (r.offline) return `<div class="row"><span class="lbl">${r.label}</span><span class="badge na"><span class="dotpill"></span>offline</span></div>`;
+    const delta = Math.abs(r.zone - r.setp);
+    const badge = delta >= 8 ? 'warn' : 'ok';
+    return `<div class="row"><span class="lbl">${r.label}</span><span class="badge ${badge}"><span class="dotpill"></span>${r.zone.toFixed(0)}&deg;F <span class="muted">(set ${r.setp.toFixed(0)}&deg;F)</span></span></div>`;
+  }).join('') || '<div class="muted">none found</div>';
+} catch(e) { document.getElementById('rtuTemps').innerHTML = '<div class="muted">could not load unit temperatures</div>'; } };
+
+async function refresh() { try {
+  const [root,ni,sch,hoa,al] = await Promise.all([ox(F),ox(F+'NetworkInputs/'),ox(F+'Schedules/'),ox(F+'HOA/'),ox(F+'Alarms/')]);
+  document.getElementById('store').textContent = parse(byName(root,'StoreName')).v + '  ·  ' + parse(byName(root,'EMSVersion')).v;
+  const oatRaw = byName(ni,'outsideAirTemperature'), oat = parse(oatRaw), aq = parse(byName(al,'AlarmQty'));
+  const aqn = Math.round(parseFloat(aq.v)||0);
+  document.getElementById('statTemp').textContent = oat.v;
+  document.getElementById('statTempN').textContent = (oatRaw||'').includes('@ def') ? 'panel default' : 'live';
+  document.getElementById('statAlarms').textContent = aqn;
+
+  const alerts = [];
+  if (aqn > 0) alerts.push({level:'bad', t: aqn + ' active panel alarm' + (aqn===1?'':'s'), d:'includes the dead prior-tenant cloud feed — safe to ignore that one'});
+  const rowsOf = (d,f) => ch(d).filter(f).map(e=>{ const p=parse(disp(e)); return {name: clean(e.getAttribute('displayName'),e.getAttribute('name')), v: p.v, badge: badgeOf(p.status)}; });
+  const hoaRows = rowsOf(hoa, e=>/State/.test(e.getAttribute('name')||''));
+  const downCount = hoaRows.filter(r=>r.badge==='bad').length;
+  if (downCount > 0) alerts.push({level:'warn', t: downCount + ' rooftop unit' + (downCount===1?'':'s') + ' not communicating', d:'panel commands only reach the units that are talking'});
+  document.getElementById('alerts').innerHTML = alerts.length
+    ? alerts.map(a=>`<div class="alert ${a.level}"><div><div class="t">${a.t}</div><div class="d">${a.d}</div></div></div>`).join('')
+    : '<div class="muted">no active alerts</div>';
+
+  const rowHtml = (rows) => rows.map(r=>`<div class="row"><span class="lbl">${r.name}</span><span class="badge ${r.badge}"><span class="dotpill"></span>${r.v}</span></div>`).join('') || '<div class="muted">none</div>';
+  const hoaHtml = (rows) => rows.map(r=>{
+    const opts = ['Auto','Hand','Off'].map(o=>`<option ${r.v.toLowerCase()===o.toLowerCase()?'selected':''}>${o}</option>`).join('');
+    const isDown = r.badge==='bad';
+    return `<div class="row"><span class="lbl">${r.name}${isDown?' <span class=\"muted\">· offline</span>':''}</span>
+      <select class="hoasel" disabled title="Read-only for now — see note above">${isDown?'<option>Unavailable</option>':opts}</select></div>`;
+  }).join('') || '<div class="muted">none</div>';
+  document.getElementById('sch').innerHTML = rowHtml(rowsOf(sch, e=>/Schedule/.test(e.getAttribute('name')||'')));
+  document.getElementById('hoa').innerHTML = hoaHtml(hoaRows);
+  document.getElementById('ni').innerHTML = rowHtml(rowsOf(ni, e=>e.tagName==='ref' && e.getAttribute('displayName')));
+
+  const c = document.getElementById('conn');
+  c.className = 'pill ok'; c.innerHTML = '<span class="dotpill"></span>live · ' + new Date().toLocaleTimeString();
+} catch(e) {
+  const c = document.getElementById('conn');
+  c.className = 'pill bad'; c.innerHTML = '<span class="dotpill"></span>reconnecting…';
+} }
+
+refresh(); window.bmsCtlStatus(); window.bmsLightStatus(); window.bmsSchedStatus(); window.bmsRtuTemps();
+setInterval(() => { refresh(); window.bmsCtlStatus(); window.bmsLightStatus(); window.bmsSchedStatus(); window.bmsRtuTemps(); }, 20000);
+</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UA Theater · Building Controls</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0b0f14;color:#e7edf3;font:15px/1.4 -apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:1000px;margin:0 auto;padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid #1e2a36;padding-bottom:12px;margin-bottom:16px}
+.top h1{font-size:18px;margin:0;font-weight:700}.top .sub{color:#8aa0b2;font-size:12px}
+.pill{font-size:12px;padding:3px 9px;border-radius:999px;background:#12303f;color:#7fd1ff;border:1px solid #1d4d63}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px}
+.tile{background:#111823;border:1px solid #1e2a36;border-radius:14px;padding:14px}
+.tile .k{color:#8aa0b2;font-size:12px;text-transform:uppercase;letter-spacing:.5px}.tile .v{font-size:26px;font-weight:700;margin-top:6px}.tile .n{font-size:11px;color:#6f8598;margin-top:4px}
+.sec{margin-bottom:20px}.sec h2{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:#8aa0b2;margin:0 0 8px}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 12px;background:#0f1620;border:1px solid #1a2531;border-radius:10px;margin-bottom:6px;gap:10px}
+.row .lbl{color:#cdd9e4}.row .rv{font-weight:600;text-align:right}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px}.ok{background:#3ddc84}.warn{background:#ffb020}.bad{background:#ff5a5a}.na{background:#5c6b78}
+.muted{color:#6f8598;font-size:12px}.note{background:#10202b;border:1px solid #1d4d63;border-radius:12px;padding:12px;color:#a9c7d8;font-size:13px}
+button{cursor:pointer}
+#setupNote{background:#2b1d10;border:1px solid #63431d;border-radius:12px;padding:14px;margin-bottom:16px;font-size:13px;color:#e8c68a}
+#setupNote b{color:#ffb84d}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="setupNote">
+    <b>Before this works:</b> your device must be on the SAME local network as the Novar panel (192.168.1.x) —
+    either plugged into the panel's ethernet switch/LAN2 port, or on WiFi that's bridged to that same network.
+    If the tiles below say "reconnecting", you're not on that network yet. This page needs no internet and no Claude —
+    it talks straight to the panel at 192.168.1.123.
+  </div>
+  <div class="top"><div><h1>UA Theater · Building Controls</h1><div class="sub" id="store">reading…</div></div>
+  <div style="text-align:right"><div class="pill" id="conn">connecting…</div><div class="sub" id="clock"></div></div></div>
+
+  <div id="ctlCard" style="background:#0e1a1f;border:1px solid #1d4d63;border-radius:16px;padding:16px;margin-bottom:20px">
+    <div style="font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:#8aa0b2">AC Control</div>
+    <div id="ctlStatus" style="font-size:20px;font-weight:700;margin-top:4px">Mode: reading…</div>
+    <div id="ctlSub" style="font-size:12px;color:#7fd1ff;margin-top:2px"></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:14px">
+      <button id="bCool" style="background:#0e63b3;color:#fff;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700">❄️ Start Cooling · 1 hr</button>
+      <button id="bHold" style="background:#12303f;color:#7fd1ff;border:1px solid #1d4d63;border-radius:12px;padding:14px;font-size:15px;font-weight:700">🏢 Cooling Hold · until stopped</button>
+      <button id="bAuto" style="background:#1a2531;color:#cdd9e4;border:1px solid #2a3a49;border-radius:12px;padding:14px;font-size:15px;font-weight:700">↩︎ Back to Auto</button>
+    </div>
+    <div id="ltRow" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:10px;border-top:1px solid #1d4d63;padding-top:12px">
+      <button id="bLint" style="background:#b8860b;color:#fff;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700">💡 Interior Lights · On</button>
+      <button id="bLext" style="background:#8a6d0b;color:#fff;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:700">🅿️ Exterior Lights · On</button>
+      <button id="bLall" style="background:#caa227;color:#1a1200;border:0;border-radius:12px;padding:14px;font-size:15px;font-weight:800">🔦 ALL Lights On</button>
+      <button id="bLoff" style="background:#1a2531;color:#cdd9e4;border:1px solid #2a3a49;border-radius:12px;padding:14px;font-size:15px;font-weight:700">↩︎ Lights Auto</button>
+    </div>
+    <div id="ltStatus" style="font-size:12px;color:#e8c65a;margin-top:8px"></div>
+    <div style="font-size:11px;color:#6f8598;margin-top:10px">
+      Cooling override is the panel's designed after-hours button — units stay on their own safety logic.
+      Interior lighting was never fully commissioned at Regal handoff (see note in Sensors panel below) —
+      if the light buttons don't visibly change anything, that circuit isn't wired to this panel.
+    </div>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+  <div class="sec"><h2>Occupancy schedules (this is what actually runs the building day-to-day)</h2><div id="sch"></div></div>
+  <div class="sec"><h2>Rooftop units — Hand / Off / Auto</h2><div id="hoa"></div></div>
+  <div class="sec"><h2>Sensors & system inputs</h2><div id="ni"></div></div>
+  <div class="note">
+    Live mirror + control of the Novar/Opus panel, talking directly over its built-in "obix" data feed — no Java, no app install, no Claude.
+    Bookmark this page on any device that's on the panel's local network. Auto-refreshes every 20s.
+    Full write-up of how this panel works: <code>BUILDING-SYSTEMS-AND-ACCESS.md</code> in this repo.
+  </div>
+</div>
+<script>
+const BASE = 'http://192.168.1.123';
+const F = BASE + '/obix/config/';
+const ox = async (p) => new DOMParser().parseFromString(await (await fetch(p,{headers:{Accept:'text/xml'}})).text(),'text/xml');
+const ch = (d) => [...d.documentElement.children];
+const disp = (e) => e.getAttribute('display') || e.getAttribute('val') || '';
+const byName = (d,n) => { const e = ch(d).find(x=>x.getAttribute('name')===n); return e ? disp(e) : null; };
+const parse = (s) => { s=s||''; const m=s.match(/\{([^}]*)\}/); return {v:(s.split('{')[0].trim())||'—', status: m?m[1]:''}; };
+const dotOf = (st) => !st||st==='null' ? 'na' : st==='ok' ? 'ok' : st==='alarm' ? 'bad' : 'warn';
+const clean = (dn,nm) => dn || (nm||'').replace(/\$([0-9a-fA-F]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+const post = (u,b) => fetch(u,{method:'POST',headers:{'Content-Type':'text/xml'},body:b||'<obj/>'}).then(r=>r.text());
+const rd = (u) => fetch(u,{headers:{Accept:'text/xml'}}).then(r=>r.text());
+
+window.bmsCtlStatus = async () => { try {
+  const mode = (await rd(F+'SetpointsOVRD/CheckoutOVRD/out/')).match(/val="([^"]+)"/)?.[1] || '?';
+  const rem = (await rd(F+'SetpointsOVRD/CoolingOvrd/TimeRemain/')).match(/display="([^"]+)"/)?.[1] || '';
+  const el = document.getElementById('ctlStatus'), sub = document.getElementById('ctlSub');
+  el.textContent = 'Mode: ' + mode + (mode==='Cooling' ? '  ❄️ COOLING NOW' : '');
+  el.style.color = mode==='Cooling' ? '#7fd1ff' : (mode==='Inactive' ? '#cdd9e4' : '#ffb020');
+  sub.textContent = (mode==='Cooling' && rem && rem!=='0ms') ? ('auto-reverts in '+rem) : '';
+} catch(e){} };
+
+window.bmsAction = async (a) => {
+  const msg = {cool1h:'Start COOLING for 1 hour? Auto-reverts after.', hold:'Hold COOLING on until you press Back to Auto?', auto:'Return to Auto now?'}[a];
+  if (!window.confirm(msg)) return;
+  try {
+    if (a==='cool1h') await post(F+'SetpointsOVRD/CoolingOvrd/fire/');
+    if (a==='hold') await post(F+'SetpointsOVRD/CheckoutOVRD/set/','<enum val="Cooling"/>');
+    if (a==='auto') { await post(F+'SetpointsOVRD/CheckoutOVRD/auto/'); await post(F+'SetpointsOVRD/CoolingOvrd/timerExpired/'); }
+    setTimeout(window.bmsCtlStatus, 900);
+  } catch(e){ alert('Write failed: '+e); }
+};
+
+const LI = F+'Lighting/ZoneLtsInt/', LE = F+'Lighting/ZoneLtsExtLS/';
+window.bmsLights = async (a) => {
+  const msg = {int:'Turn INTERIOR lights ON?', ext:'Turn EXTERIOR / parking lights ON?', all:'Turn ALL lights ON?', off:'Return lights to Auto?'}[a];
+  if (!window.confirm(msg)) return;
+  try {
+    if (a==='int'||a==='all') await post(LI+'Override1/fire/');
+    if (a==='ext'||a==='all') await post(LE+'Override1/fire/');
+    if (a==='off') { await post(LI+'Override1/timerExpired/'); await post(LE+'Override1/timerExpired/'); }
+    setTimeout(window.bmsLightStatus, 900);
+  } catch(e){ alert('Light write failed: '+e); }
+};
+window.bmsLightStatus = async () => { try {
+  const i = (await rd(LI+'ZoneLts/')).match(/display="([^"]+)"/)?.[1] || '?';
+  const e = (await rd(LE+'ZoneLts/')).match(/display="([^"]+)"/)?.[1] || '?';
+  document.getElementById('ltStatus').textContent = 'Lights commanded — interior: '+i+'   ·   exterior: '+e;
+} catch(err){} };
+
+document.getElementById('bCool').onclick = () => window.bmsAction('cool1h');
+document.getElementById('bHold').onclick = () => window.bmsAction('hold');
+document.getElementById('bAuto').onclick = () => window.bmsAction('auto');
+document.getElementById('bLint').onclick = () => window.bmsLights('int');
+document.getElementById('bLext').onclick = () => window.bmsLights('ext');
+document.getElementById('bLall').onclick = () => window.bmsLights('all');
+document.getElementById('bLoff').onclick = () => window.bmsLights('off');
+
+async function refresh() { try {
+  const [root,ni,sch,hoa,al] = await Promise.all([ox(F),ox(F+'NetworkInputs/'),ox(F+'Schedules/'),ox(F+'HOA/'),ox(F+'Alarms/')]);
+  document.getElementById('store').textContent = parse(byName(root,'StoreName')).v + '  ·  ' + parse(byName(root,'EMSVersion')).v;
+  document.getElementById('clock').textContent = 'panel: ' + parse(byName(root,'CurrentTime')).v;
+  const oatRaw = byName(ni,'outsideAirTemperature'), oat = parse(oatRaw), aq = parse(byName(al,'AlarmQty'));
+  const aqn = Math.round(parseFloat(aq.v)||0);
+  const tiles = [
+    {k:'Outdoor Temp', v:oat.v, n:(oatRaw||'').includes('@ def') ? 'panel default — not a live reading' : 'live'},
+    {k:'Cooling Override', v:'see AC Control', n:'panel status above'},
+    {k:'Active Alarms', v:aqn, n: aqn ? 'incl. dead data feed' : 'none'},
+    {k:'Enthalpy', v:parse(byName(ni,'enthalpy')).v, n:'free-cooling check'}
+  ];
+  document.getElementById('tiles').innerHTML = tiles.map(t=>`<div class="tile"><div class="k">${t.k}</div><div class="v">${t.v}</div><div class="n">${t.n}</div></div>`).join('');
+  const rowsOf = (d,f) => ch(d).filter(f).map(e=>{ const p=parse(disp(e)); return `<div class="row"><span class="lbl"><span class="dot ${dotOf(p.status)}"></span>${clean(e.getAttribute('displayName'),e.getAttribute('name'))}</span><span class="rv">${p.v}</span></div>`; }).join('') || '<div class="muted">none</div>';
+  document.getElementById('sch').innerHTML = rowsOf(sch, e=>/Schedule/.test(e.getAttribute('name')||''));
+  document.getElementById('hoa').innerHTML = rowsOf(hoa, e=>/State/.test(e.getAttribute('name')||''));
+  document.getElementById('ni').innerHTML = rowsOf(ni, e=>e.tagName==='ref' && e.getAttribute('displayName'));
+  const c = document.getElementById('conn'); c.textContent = 'live · ' + new Date().toLocaleTimeString(); c.style.background='#12303f';
+} catch(e) { const c = document.getElementById('conn'); c.textContent='reconnecting…'; c.style.background='#3a1d1d'; } }
+
+refresh(); window.bmsCtlStatus(); window.bmsLightStatus();
+setInterval(() => { refresh(); window.bmsCtlStatus(); window.bmsLightStatus(); }, 20000);
+</script>
+</body>
+</html>

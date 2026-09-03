@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/static/favicon-180.png">
+<title>Power Church · Units</title>
+<style>
+:root{
+  --surface-2:#ffffff; --surface-1:#f6f7f8; --surface-0:#eef0f2;
+  --text-primary:#1a1d21; --text-secondary:#5c6570; --text-muted:#8a93a0;
+  --border:#e3e6ea; --border-strong:#cfd4da;
+  --accent:#0e63b3; --on-accent:#ffffff; --bg-accent:#e6f1fb; --text-accent:#0c447c;
+  --warn:#b8860b; --bg-warn:#faeeda; --text-warn:#854f0b;
+  --bad:#a3402d; --bg-bad:#faece7; --text-bad:#712b13;
+  --ok:#0f6e56; --bg-ok:#e1f5ee; --text-ok:#085041;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--surface-0);color:var(--text-primary);
+  font:15px/1.45 -apple-system,Segoe UI,Roboto,sans-serif}
+.wrap{max-width:680px;margin:0 auto;padding:0 12px 40px}
+.bar{position:sticky;top:0;background:var(--surface-0);padding:14px 4px 10px;z-index:5}
+.bar .row{display:flex;justify-content:space-between;align-items:center}
+h1{font-size:17px;margin:0;font-weight:600}
+.sub{color:var(--text-secondary);font-size:12px;margin-top:2px}
+.nav{font-size:12px}
+.nav a{color:var(--accent);text-decoration:none}
+.allbtns{display:flex;gap:8px;margin-top:12px}
+.allbtns button{flex:1;padding:12px;border-radius:10px;border:0.5px solid var(--border-strong);
+  font-size:14px;font-weight:600;cursor:pointer;background:var(--surface-2)}
+.allbtns .on{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.allbtns .off{color:var(--text-secondary)}
+.summary{font-size:12px;color:var(--text-secondary);margin:10px 4px 4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:460px){.grid{grid-template-columns:1fr}}
+.u{background:var(--surface-2);border:0.5px solid var(--border);border-radius:var(--radius);padding:13px 14px}
+.u.down{opacity:.6}
+.u .name{font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:999px;white-space:nowrap}
+.pill.cooling{background:var(--bg-accent);color:var(--text-accent)}
+.pill.idle{background:var(--surface-0);color:var(--text-muted)}
+.pill.fan{background:var(--bg-ok);color:var(--text-ok)}
+.pill.down{background:var(--bg-bad);color:var(--text-bad)}
+.temps{display:flex;gap:14px;margin:9px 0 11px;align-items:baseline}
+.temps .big{font-size:26px;font-weight:600}
+.temps .set{font-size:12px;color:var(--text-secondary)}
+.mode{font-size:11px;color:var(--text-muted);margin-bottom:9px}
+.btns{display:flex;gap:7px}
+.btns button{flex:1;padding:9px;border-radius:8px;border:0.5px solid var(--border-strong);
+  font-size:13px;font-weight:600;cursor:pointer;background:var(--surface-1)}
+.btns button.act{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+.btns button:disabled{opacity:.4;cursor:not-allowed}
+.tempctl{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;
+  background:var(--surface-1);border:0.5px solid var(--border);border-radius:8px;padding:5px 8px}
+.tempctl .lbl{font-size:11px;color:var(--text-secondary)}
+.tempctl .val{font-size:17px;font-weight:600;min-width:44px;text-align:center}
+.tempctl button{width:38px;height:34px;border-radius:8px;border:0.5px solid var(--border-strong);
+  background:var(--surface-2);font-size:19px;font-weight:600;cursor:pointer;line-height:1}
+.tempctl button:active{background:var(--accent);color:var(--on-accent)}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+  background:var(--text-primary);color:#fff;padding:10px 16px;border-radius:10px;
+  font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90%}
+#toast.show{opacity:.95}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <div class="row">
+      <div><h1>Units</h1><div class="sub" id="clock">Power Church · per-room AC</div></div>
+      <div class="nav"><a href="/">← Building</a></div>
+    </div>
+    <div class="allbtns">
+      <button class="on" onclick="allMode('Customer')">All On</button>
+      <button class="off" onclick="allMode('Unoccupied')">All Off</button>
+      <button onclick="load()">Refresh</button>
+    </div>
+    <div class="summary" id="summary">Loading rooms…</div>
+    <div id="panelbanner" style="display:none;margin:8px 4px 0;padding:9px 12px;border-radius:8px;
+      background:var(--bg-warn);color:var(--text-warn);font-size:12.5px"></div>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const api = (p,opt) => fetch(p,opt).then(r=>r.json());
+let busy = false;
+let firstPaint = true;
+const held = {};   // unit -> timestamp until which we trust our own optimistic mode
+const heldT = {};  // unit -> timestamp until which we trust our own optimistic target
+
+function toast(m){ const t=document.getElementById('toast'); t.textContent=m;
+  t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); }
+
+function pillClass(st){ return st==='cooling'?'cooling':st==='fan only'?'fan':st==='down'?'down':'idle'; }
+
+// Build a card ONCE. Later refreshes mutate its fields in place, never replace it.
+function buildCard(u){
+  const el = document.createElement('div');
+  el.className = 'u' + (u.talking===false?' down':'');
+  el.id = 'c-'+u.unit;
+  if(u.talking===false){
+    el.innerHTML = `<div class="name">${u.room||u.unit}
+      <span class="pill down">not talking</span></div>
+      <div class="mode">${u.unit} · panel can't reach this unit</div>`;
+    return el;
+  }
+  el.innerHTML = `
+    <div class="name"><span class="rm">${u.room||u.unit}</span>
+      <span class="pill idle" data-pill>…</span></div>
+    <div class="temps"><span class="big" data-temp>--°</span>
+      <span class="set" data-set></span></div>
+    <div class="mode" data-mode>${u.unit} · reading…</div>
+    <div class="btns">
+      <button data-cool onclick="setMode('${u.unit}','Customer',this)">Cool</button>
+      <button data-off  onclick="setMode('${u.unit}','Unoccupied',this)">Off</button>
+    </div>
+    <div class="tempctl">
+      <button onclick="stepTarget('${u.unit}',-1)">−</button>
+      <div><div class="lbl">hold at</div><div class="val" data-target>--°</div></div>
+      <button onclick="stepTarget('${u.unit}',1)">+</button>
+    </div>`;
+  return el;
+}
+
+// Update an existing card's fields, only touching what changed (no flash).
+function updateCard(el, u){
+  if(u.talking===false){
+    if(!el.classList.contains('down')){
+      el.classList.add('down');
+      el.innerHTML = `<div class="name">${u.room||u.unit}
+        <span class="pill down">not talking</span></div>
+        <div class="mode">${u.unit} · panel can't reach this unit</div>`;
+    }
+    return;
+  }
+  if(el.classList.contains('down')){ el.classList.remove('down');
+    el.replaceWith(buildCard(u)); return; }
+  const rm=el.querySelector('.rm'); if(rm && rm.textContent!==(u.room||u.unit)) rm.textContent=u.room||u.unit;
+  const pill=el.querySelector('[data-pill]');
+  const st=u.state||'idle';
+  if(pill && pill.textContent!==st){ pill.textContent=st; pill.className='pill '+pillClass(st); }
+  const temp=el.querySelector('[data-temp]'); const tv=(u.zone_f||'--')+'°';
+  if(temp && temp.textContent!==tv) temp.textContent=tv;
+  const set=el.querySelector('[data-set]'); const sv=u.cool_setpoint_f?('set '+u.cool_setpoint_f+'°'):'';
+  if(set && set.textContent!==sv) set.textContent=sv;
+  const modeShort=(u.mode||'').replace('Unoccupied','Off').replace('Customer','On (cool)').replace('Employee','On (warm)');
+  const mode=el.querySelector('[data-mode]'); const mv=`${u.unit} · mode: ${modeShort||'—'}`;
+  if(mode && mode.textContent!==mv) mode.textContent=mv;
+  // Button highlight follows the COMMANDED mode only (never the runtime
+  // cooling/idle state), so exactly one of Cool/Off is ever lit. A recent
+  // local tap wins for 90s so it can't flip back while the compressor stages.
+  const active = (held[u.unit] && held[u.unit]>Date.now()) ? held[u.unit+'_mode'] : u.mode;
+  const cool=el.querySelector('[data-cool]'), off=el.querySelector('[data-off]');
+  if(cool) cool.classList.toggle('act', active==='Customer');
+  if(off)  off.classList.toggle('act', active==='Unoccupied');
+  // target temperature (base setpoint + offset). Hold a local value for 90s
+  // after a tap so quick +/- presses stack instead of snapping back.
+  const tgt=el.querySelector('[data-target]');
+  if(tgt){
+    let t = (heldT[u.unit] && heldT[u.unit]>Date.now()) ? heldT[u.unit+'_val'] : u.target_f;
+    if(t!=null){ const tv=Math.round(t)+'°'; if(tgt.textContent!==tv) tgt.textContent=tv; tgt.dataset.v=t; }
+    else if(tgt.textContent==='--°' && u.base_setpoint_f!=null){ tgt.textContent=Math.round(u.base_setpoint_f)+'°'; tgt.dataset.v=u.base_setpoint_f; }
+  }
+}
+
+function paint(rooms){
+  const grid=document.getElementById('grid');
+  const seen={};
+  rooms.forEach(u=>{
+    seen[u.unit]=1;
+    let el=document.getElementById('c-'+u.unit);
+    if(!el){ el=buildCard(u); grid.appendChild(el); }
+    updateCard(el,u);
+  });
+  // remove cards for units no longer present
+  [...grid.children].forEach(el=>{ const id=el.id.replace('c-',''); if(!seen[id]) el.remove(); });
+}
+
+async function load(){
+  // First visit only: paint a skeleton fast so the page isn't blank.
+  if(firstPaint){
+    try{
+      const l=await api('/api/units');
+      if(l.units){
+        document.getElementById('summary').textContent =
+          `${l.talking} online · ${l.down} not talking · reading temps…`;
+        paint(l.units.map(x=>({unit:x.unit, room:x.unit, talking:x.talking, state:x.talking?'idle':'down'})));
+      }
+    }catch(e){}
+    firstPaint=false;
+  }
+  const d=await api('/api/rooms');
+  if(d.error){ document.getElementById('summary').textContent=d.error; return; }
+  const bn=document.getElementById('panelbanner');
+  if(d.panel_ok===false){
+    bn.style.display='block';
+    bn.textContent = (d.rooms&&d.rooms.length)
+      ? 'Panel not answering — showing last known readings. The units keep running on their own. If it does not clear, power-cycle the panel in the booth.'
+      : 'Panel not answering yet — the Pi is here and waiting for it. The units keep running on their own. If this does not clear in a few minutes, power-cycle the panel in the booth.';
+  } else { bn.style.display='none'; }
+  if(d.rooms && d.rooms.length) paint(d.rooms);
+  document.getElementById('summary').textContent =
+    (d.panel_ok===false && !(d.rooms&&d.rooms.length))
+      ? 'Waiting for the panel…'
+      : `${d.cooling} cooling · ${d.live_units} online · ${d.down} not talking${d.stale?' · reconnecting':''}`;
+  document.getElementById('clock').textContent =
+    'Power Church · per-room AC · '+new Date().toLocaleTimeString();
+}
+
+async function setMode(unit,mode,btn){
+  if(busy) return; busy=true;
+  // optimistic: hold this unit's button state for 90s so it can't flip back mid-stage
+  held[unit]=Date.now()+90000; held[unit+'_mode']=mode;
+  const el=document.getElementById('c-'+unit);
+  if(el){ const c=el.querySelector('[data-cool]'), o=el.querySelector('[data-off]');
+    if(c) c.classList.toggle('act', mode==='Customer'); if(o) o.classList.toggle('act', mode==='Unoccupied'); }
+  toast(`${unit} → ${mode==='Customer'?'Cool':'Off'}…`);
+  const r=await api(`/api/units/${unit}/mode`,{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,hours:12})});
+  busy=false;
+  toast(r.ok ? `${unit} set. Cooling stages in over a few minutes.` : `${unit} did not take (HTTP ${r.http})`);
+  setTimeout(load, 1500);
+}
+
+// Nudge a room's held temperature by ±1°. Turning the target up/down also puts
+// the room in Cool mode so it actually holds there. Clamped server-side.
+let tTimer=null;
+async function stepTarget(unit,delta){
+  const el=document.getElementById('c-'+unit); if(!el) return;
+  const tgt=el.querySelector('[data-target]'); if(!tgt) return;
+  let cur = parseFloat(tgt.dataset.v);
+  if(isNaN(cur)) return;
+  let next = Math.max(58, Math.min(88, Math.round(cur)+delta));
+  // optimistic local update; hold for 90s so refresh doesn't snap it back
+  tgt.textContent=next+'°'; tgt.dataset.v=next;
+  heldT[unit]=Date.now()+90000; heldT[unit+'_val']=next;
+  // reflect that this turns the room on
+  held[unit]=Date.now()+90000; held[unit+'_mode']='Customer';
+  const c=el.querySelector('[data-cool]'), o=el.querySelector('[data-off]');
+  if(c) c.classList.add('act'); if(o) o.classList.remove('act');
+  toast(`${el.querySelector('.rm')?.textContent||unit} → hold ${next}°`);
+  // debounce the actual write so fast taps send once
+  clearTimeout(tTimer);
+  tTimer=setTimeout(async ()=>{
+    const r=await api(`/api/units/${unit}/temp`,{method:'POST',
+      headers:{'Content-Type':'application/json'},body:JSON.stringify({target:next,hours:12})});
+    toast(r.ok ? `Holding ${el.querySelector('.rm')?.textContent||unit} at ${r.target_f}°${r.clamped?' (max reach)':''}` : `${unit} didn't take (HTTP ${JSON.stringify(r.http)})`);
+    setTimeout(load, 1500);
+  }, 700);
+}
+
+async function allMode(mode){
+  if(busy) return;
+  if(!confirm(`Set ALL online units to ${mode==='Customer'?'Cool (On)':'Off'}?`)) return;
+  busy=true; toast(`All units → ${mode==='Customer'?'Cool':'Off'}…`);
+  const r=await api('/api/units/mode',{method:'POST',
+    headers:{'Content-Type':'application/json'},body:JSON.stringify({mode,hours:12})});
+  busy=false;
+  toast(`${r.confirmed||0} of ${r.commanded||0} units set${r.skipped_down?`, ${r.skipped_down} not talking`:''}.`);
+  setTimeout(load, 1500);
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+[Unit]
+Description=Power Church BMS Bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/power-church-bms-bridge
+Environment="PANEL_BASE=http://192.168.1.123"
+Environment="PANEL_USER=__REDACTED__"
+Environment="PANEL_PASS=__REDACTED__"
+# CHANGE these two before deploying — this is the login for the dashboard
+# itself (separate from the panel's own login above). Do not leave as-is.
+Environment="DASH_USER=__REDACTED__"
+Environment="DASH_PASS=__REDACTED__"
+ExecStart=/home/pi/power-church-bms-bridge/venv/bin/uvicorn main:app --host 0.0.0.0 --port 8080
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
