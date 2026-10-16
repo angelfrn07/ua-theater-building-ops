@@ -1,0 +1,14 @@
+[Unit]
+Description=Cloudflare Quick Tunnel for Power Church HVAC page
+After=network-online.target power-church-bms-bridge.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/cloudflared tunnel --no-autoupdate --url http://localhost:8080
+Restart=on-failure
+RestartSec=5
+User=powerchurch
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Start Tailscale only once the Novar panel answers on eth0 (this is the live Pi)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'until ping -c1 -W2 -I eth0 192.168.1.123 >/dev/null 2>&1; do sleep 30; done; systemctl start tailscaled'
+
+[Install]
+WantedBy=multi-user.target

@@ -49,6 +49,13 @@ same night, 2026-07-08 — one likely-cheap bus/power fault), and Aud 11 + 8A
 both recommend: smart thermostats per RTU, which removes the fragile 1998 panel
 from the loop entirely. The Pi overlay is the bridge until then.
 
+## Resilience: the SD card (added 2026-10-15)
+
+Everything unique to the Pi (logins, desired.json, WiFi profile, Tailscale
+identity) lives on one SD card. The Pi 4's card is 8 GB and ~91% full. Keep a
+current backup and a ready replacement: `pi-bms-bridge/deploy/NEW-PI-SETUP.md`
+builds a new Pi at home from a backup so the swap at the booth is plug and play.
+
 ## Build order
 1. Gentle cache  (stops the crashes)   <- highest value, lowest risk
 2. Keeper loop   (setpoints hold + self-heal)
