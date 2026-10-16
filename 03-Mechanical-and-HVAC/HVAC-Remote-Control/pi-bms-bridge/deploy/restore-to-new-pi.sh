@@ -64,6 +64,10 @@ sudo nmcli con add type ethernet ifname eth0 con-name panel-eth0 \
   ipv4.method manual ipv4.addresses 192.168.1.51/24 ipv4.never-default yes \
   ipv4.routes 192.168.1.123/32 connection.autoconnect yes >/dev/null
 # Church WiFi profile from the live Pi (autoconnects once in range, metric 50).
+# If the Imager/cloud-init WiFi setup also listed "Power Church Admin", leave that
+# duplicate alone: it lives in one netplan file together with the home WiFi, and
+# deleting it with nmcli deletes the whole file (home WiFi included). Ours wins
+# anyway on autoconnect-priority 100. Don't list the church SSID in Imager at all.
 sudo install -m 600 "$WORK/etc/NetworkManager/system-connections/Power Church Admin.nmconnection" \
   /etc/NetworkManager/system-connections/
 sudo nmcli con reload

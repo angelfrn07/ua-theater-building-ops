@@ -78,6 +78,20 @@ never fights the live one for the same Tailscale identity.
    `sudo systemctl enable tailscaled && sudo systemctl disable tailscale-when-live`
 6. Keep the old card, labeled, in the booth as a spare. Don't reuse it.
 
+## Gotchas from the first real build (2026-10-16, Pi 3B)
+
+- **In Imager, list only the home WiFi.** The restore script adds the church
+  WiFi. If both are in Imager they share one netplan file, and deleting the
+  duplicate church entry later deletes the home WiFi with it (the Pi drops off
+  WiFi at the next reboot). Recovery: cable eth0 to a laptop, SSH to the IPv6
+  link-local, `nmcli con add` the home WiFi.
+- **Leave eth0 unplugged at home** if your home network hands out a 192.168.1.x
+  DNS server (e.g. an eero behind an AT&T gateway at 192.168.1.254). eth0 owns
+  192.168.1.0/24, so DNS goes down the cable and HTTPS fails. Ping still works,
+  which is misleading. Not an issue at the church.
+- macOS blocks command-line raw writes to SD cards even as root. Flash with the
+  Imager GUI, then edit `user-data` / `network-config` on the `bootfs` volume.
+
 ## Pi 3 notes
 
 - **Pi 3B (not B+) is 2.4 GHz only.** Power Church Admin broadcasts on 2.4 GHz
