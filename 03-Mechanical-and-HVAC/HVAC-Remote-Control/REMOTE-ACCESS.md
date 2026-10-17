@@ -1,7 +1,7 @@
 # Remote access to the Power Church HVAC Pi — CHEAT SHEET
 
-Last verified 2026-10-15. The Pi is `power-church-bms`, dual-homed:
-eth0 192.168.1.51 (wired to the Novar panel, isolated), wlan0 192.168.1.88
+Last verified 2026-10-17 (Pi 3 Model B swapped in that day). The Pi is `power-church-bms`, dual-homed:
+eth0 192.168.1.51 (wired to the Novar panel, isolated), wlan0 192.168.1.94
 ("Power Church Admin" wifi, AT&T gateway 192.168.1.254 + internet). Changed
 2026-10-15 — see field-logs/2026-10-15-church-network-change-and-pi-backup.md. Service `power-church-bms-bridge` serves the control
 UI on :8080. Keep BOTH connections plugged in — the panel wire AND the internet.
@@ -16,11 +16,11 @@ UI on :8080. Keep BOTH connections plugged in — the panel wire AND the interne
     http://100.117.82.57:8080/units   (or http://power-church-bms:8080/units)
     login: powerchurch / [ask Angel]
 - ON the church wifi:
-    http://192.168.1.88:8080/units  or  http://power-church-bms.local:8080/units
+    http://192.168.1.94:8080/units  or  http://power-church-bms.local:8080/units
     (NOT 192.168.1.51 — church wifi is now also 192.168.1.x, so .51 won't route there)
 
 ## SSH (command line)
-- On the church wifi:   ssh powerchurch@192.168.1.88
+- On the church wifi:   ssh powerchurch@192.168.1.94
 - From anywhere (Tailscale app ON): ssh powerchurch@100.117.82.57
                                      (or ssh powerchurch@power-church-bms)
 - login: powerchurch / [ask Angel]   (our key is also installed)
@@ -51,7 +51,7 @@ network — no ports opened on the church router, nothing exposed publicly.
 
 ## The Pi's network (dual-homed, keep it this way)
 - eth0  192.168.1.51    -> wired to the Novar panel (isolated, no gateway)
-- wlan0 192.168.1.88    -> "Power Church Admin" wifi, provides internet (default route)
+- wlan0 192.168.1.94    -> "Power Church Admin" wifi, provides internet (default route)
 - Panel stays reachable on eth0; internet + Tailscale ride on wlan0.
 - Both are 192.168.1.0/24 since 2026-10-15. A /32 route (192.168.1.123 dev eth0,
   on NM con `netplan-eth0`) pins the panel to the cable; wlan0 has metric 50 so

@@ -103,12 +103,12 @@ works with Angel's laptop unplugged.** This is the real home for control; the
 - App on the Pi: `~/power-church-bms-bridge/` (main.py, units.py, scheduler.py,
   schedule.json, static/). A mirror lives in `pi-bms-bridge/` here for backup.
 - Restart after editing: `sudo systemctl restart power-church-bms-bridge`.
-- Network (since 2026-10-15): wlan0 on "Power Church Admin" = **192.168.1.88**, the
+- Network (since 2026-10-15): wlan0 on "Power Church Admin" = **192.168.1.94** (Pi 3, DHCP; was .88 on the old Pi 4), the
   SAME /24 as the panel. A `192.168.1.123/32` route on eth0 keeps panel traffic on
   the cable. If the Pi has no internet, it is almost always the WiFi profile.
   No-network fallback: cable the Pi's eth0 straight to a laptop and SSH to its IPv6
   link-local (`dns-sd -G v4v6 power-church-bms.local`, then `ssh "powerchurch@fe80::…%enX"`).
-- **SD card is the single point of failure** (8 GB, ~91% full on the Pi 4). Backup +
+- **SD card is the single point of failure** (Pi 3 Model B since 2026-10-17, 32 GB card ~11% used; old Pi 4 + its 8 GB card kept as a labeled spare). Backup +
   rebuild: `pi-bms-bridge/deploy/NEW-PI-SETUP.md`.
 
 ### Pages
